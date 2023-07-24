@@ -1,4 +1,4 @@
-# INTRODUCTION
+# INFORMATION
 
 Within this folder you will find two demos to run the ion sampling with Rosetta SPaDES and a design with SPaDES. 
 
@@ -6,8 +6,6 @@ The design is more Rosetta "native", that is, like other Rosetta functions, it i
 
 The ion sampling requires some intermediate steps as it involves both an initial coarse search, followed by geometric clustering, then a more refined search to get the final results. The ion sampling is embarrassingly parallelisable, that is each ion position can be run individually, therefore we structure the SPaDES runs as being run on a large cluster (specifically a slurm based cluster) to maximise generation of results in the shortest timeframe possible.
 
-There are additional README.md files in each of the demo folders containing instructions to run the demos.
+There are additional README.md files in each of the demo folders containing detailed instructions to run the demos.
 
-The general inputs used for the rest of the results discussed in the paper can be found in the previous all_input folder.
-
-For more information, please get in touch with me at lucas.rudden@epfl.ch
+The general inputs used for the rest of the results discussed in the paper can be found in the previous ../all_input folder.

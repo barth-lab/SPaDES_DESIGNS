@@ -1,0 +1,34 @@
+# Energy
+-restore_pre_talaris_2013_behavior true
+
+# Scoring
+-score
+ -water_hybrid_sf true
+ -weights /path/to/scoringfunction/inputs/opte_mb_elec.wts
+
+# Hydrate
+-hydrate
+ -water_rotamers_cap 500
+ -hbond_threshold -0.5
+
+# File management
+-inout:skip_connect_info true
+-inout:write_all_connect_info false
+-out:nstruct 400
+-overwrite
+
+# Packing
+-ignore_zero_occupancy false
+-use_input_sc
+-ex1
+-ex2
+-extrachi_cutoff 1
+-in:auto_setup_metals
+
+# Membrane
+-membrane:Membed_init
+-membrane::Mhbond_depth
+
+# Constraints
+-cst_weight 1.0
+-cst_fa_weight 1.0

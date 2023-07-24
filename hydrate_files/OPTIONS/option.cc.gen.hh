@@ -26,12 +26,10 @@ option.add( basic::options::OptionKeys::in::max_bond_length, "Sets maximum O-C d
 option.add( basic::options::OptionKeys::in::min_bond_length, "Sets minimum O-C distance for glycan connection search. Default is 1.15 Angstroms." ).shortd( "Min. distance for glycan C-O bond" ).def(1.15);
 option.add( basic::options::OptionKeys::in::glycan_virtual_offset, "Apply a very small offset to the glycan virtual positions to avoid collinearity in the angle minimization." ).shortd( "Glycan virtual offset" ).def(0);
 option.add( basic::options::OptionKeys::in::membrane, "Initialize pose as a membrane protein using specified membrane parameters. Default is false" ).shortd( "initialize membrane" ).legal(true).legal(false).def(false);
-option.add( basic::options::OptionKeys::in::tuning_param, "Specify the tuning parameter to modulate lowres and highres score functions." ).def(1.0);
 option.add( basic::options::OptionKeys::in::remember_unrecognized_res, "Ignore unrecognized residues, but remember them in PDBInfo." ).def(false);
 option.add( basic::options::OptionKeys::in::remember_unrecognized_water, "Remember waters along with other unrecognized residues." ).def(false);
 option.add( basic::options::OptionKeys::in::preserve_crystinfo, "Preserve information important for crystal refinement (B factors +CRYST1 line)" ).def(false);
 option.add( basic::options::OptionKeys::in::detect_oops, "Detect oligooxopiperazines (oops) and add required constraints" ).def(false);
-option.add( basic::options::OptionKeys::in::obey_ssbond, "When true, defer to the SSBOND records in the PDB for disulfide specification.When false, use -detect_disulf settings to determine disulfide bonding." ).def(false);
 option.add( basic::options::OptionKeys::in::detect_disulf, "Forcably enable or disable disulfide detection. When unspecified, rosetta conservatively detects disulfides in full atom input based on SG distance, but will not form centroid disulfides.  Setting '-detect_disulf true' will force aggressive disulfide detection in centroid poses based on CB distance.  Setting '-detect_disulf false' disables all detection, even in full atom poses.  Note that disabling disulfides causes severe clashes for native disulfides." ).legal(true).legal(false);
 option.add( basic::options::OptionKeys::in::detect_disulf_tolerance, "disulf tolerance" ).def(0.5);
 option.add( basic::options::OptionKeys::in::constraints_from_link_records, "Turn link records into atom pair and angle constraints" ).legal(true).legal(false).def(false);
@@ -85,7 +83,6 @@ option.add( basic::options::OptionKeys::in::file::frag_files, "Fragment input fi
 option.add( basic::options::OptionKeys::in::file::remap_pdb_atom_names_for, "When reading PDBs, use geometry to rename atoms for the residues with the given three letter codes." );
 option.add( basic::options::OptionKeys::in::file::extra_res, ".params file(s) for new residue types (e.g. ligands)" ).def();
 option.add( basic::options::OptionKeys::in::file::extra_res_fa, ".params file(s) for new fullatom residue types (e.g. ligands)" ).def();
-option.add( basic::options::OptionKeys::in::file::override_database_params, "Use input .params file(s) instead of database if residue name is found in residue set" ).def(false);
 option.add( basic::options::OptionKeys::in::file::extra_res_mol, ".mol file(s) for new fullatom residue types (e.g. ligands)" ).def();
 option.add( basic::options::OptionKeys::in::file::extra_res_mmCIF, ".mmCIF file(s) for component dictionary for residue types (e.g. ligands)" ).def();
 option.add( basic::options::OptionKeys::in::file::load_PDB_components, "Use the PDB ligand definitions to load all standard residue descriptions." ).def(true);
@@ -442,7 +439,6 @@ option.add( basic::options::OptionKeys::view::show_virtual_residues, "Show virtu
 option.add( basic::options::OptionKeys::view::single_glycan_color, "Show glycans as a single color instead of default" ).def(true);
 option.add( basic::options::OptionKeys::score::score_pose_cutpoint_variants, "Include cutpoint variants in the pose during linear chainbreak" ).def(false);
 option.add( basic::options::OptionKeys::score::score, "scorefunction option group" ).legal(true).def(true).is_group(true);
-option.add( basic::options::OptionKeys::score::lowres_weights, "Name of lowres weights file (without extension .wts)" ).def("interchain_cen");
 option.add( basic::options::OptionKeys::score::weights, "Name of weights file (without extension .wts)" ).def("ref2015");
 option.add( basic::options::OptionKeys::score::set_weights, "Modification to weights via the command line. Applied in ScoreFunctionFactory::create_score_function inside the function apply_user_defined_reweighting_. Format is a list of paired strings: -score::set_weights <score_type1> <setting1> <score_type2> <setting2> ..." );
 option.add( basic::options::OptionKeys::score::pack_weights, "Name of packing weights file (without extension .wts)" ).def("ref2015");
@@ -589,11 +585,11 @@ option.add( basic::options::OptionKeys::score::water_dielectric, "dielectric con
 option.add( basic::options::OptionKeys::score::facts_GBpair_cut, "GBpair interaction distance cutoff (same as elec_max_dis)" ).def(10.0);
 option.add( basic::options::OptionKeys::score::facts_kappa, "GBpair interaction screening factor" ).def(12.0);
 option.add( basic::options::OptionKeys::score::facts_asp_patch, "AtomicSolvationParameter set for nonpolar interaction in FACTS" ).def(3);
-option.add( basic::options::OptionKeys::score::facts_plane_to_self, "Add atoms in same plane to self energy pairs" ).def(true);
-option.add( basic::options::OptionKeys::score::facts_saltbridge_correction, "FACTS Self energy parameter scaling factor for polarH" ).def(1.0);
 
 }
-inline void add_rosetta_options_2( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::score::facts_dshift, "FACTS pair term denominator distance shift[bb/bbsc/scsc/saltbridge]" ).def(0.0).def(1.5).def(1.5).def(1.5);
+inline void add_rosetta_options_2( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::score::facts_plane_to_self, "Add atoms in same plane to self energy pairs" ).def(true);
+option.add( basic::options::OptionKeys::score::facts_saltbridge_correction, "FACTS Self energy parameter scaling factor for polarH" ).def(1.0);
+option.add( basic::options::OptionKeys::score::facts_dshift, "FACTS pair term denominator distance shift[bb/bbsc/scsc/saltbridge]" ).def(0.0).def(1.5).def(1.5).def(1.5);
 option.add( basic::options::OptionKeys::score::facts_die, "FACTS dielectric constant" ).def(1.0);
 option.add( basic::options::OptionKeys::score::facts_binding_affinity, "Activate FACTS options for binding affinity calculation" ).def(false);
 option.add( basic::options::OptionKeys::score::facts_intrascale_by_level, "Apply internal scaling by path_dist to CA? (definition below becomes G/D/E/Z/>Z" ).def(false);
@@ -881,14 +877,14 @@ option.add( basic::options::OptionKeys::carbohydrates::glycan_sampler::populatio
 option.add( basic::options::OptionKeys::carbohydrates::glycan_sampler::use_gaussian_sampling, "Set whether to build conformer torsions using a gaussian of the angle or through uniform sampling up to 1 SD (default)" ).def(true);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::glycan_dock, "glycan_dock option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::n_repeats, "Number of times to restart the GlycanDock algorithm starting at Stage 2 if the final docked model does not pass the quality filter (< 0 Rosetta interaction energy). Default = 3" ).def(3);
-option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::refine_only, "Perform refinement of the input putative complex only. Skips Stage 1 (conformational initialization via a random perturbation) and, during Stage 2, do not perform large perturbations in glycosidic torsion angle space. Default = false" ).def(false);
+
+}
+inline void add_rosetta_options_3( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::refine_only, "Perform refinement of the input putative complex only. Skips Stage 1 (conformational initialization via a random perturbation) and, during Stage 2, do not perform large perturbations in glycosidic torsion angle space. Default = false" ).def(false);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::prepack_only, "Perform Stage 0 pre-packing of the input putative complex only. Separates the glycoligand from its protein receptor and optimizes all sidechain rotamer conformations. Default = false" ).def(false);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::rand_glycan_jump_res, "Use a random, non-branch-point residue in the glycoligand as the Jump residue for the docking FoldTree. Default = true. False = docking FoldTree in which the residue closest to the center-of-mass of the glycoligand serves as the Jump residue" ).def(true);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::stage1_rotate_glycan_about_com, "During Stage 1 conformation initialization, rotate the glycoligand about its center-of-mass in uniform 3D space. Default = false. Recommended to set to true if confidence of the glycoligand's rigid-body orientation in the putative binding site is low." ).def(false);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::stage1_perturb_glycan_com_trans_mag, "During Stage 1 conformation initialization, this is the magnitude for performing a random translational Gaussian perturbation on the glycoligand's center-of-mass. Default = 0.5 (Angstroms)" ).def(0.5);
-
-}
-inline void add_rosetta_options_3( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::stage1_perturb_glycan_com_rot_mag, "During Stage 1 conformation initialization, this is the magnitude for performing a random rotational Gaussian perturbation on the glycoligand's center-of-mass. Default = 7.5 (degrees)" ).def(7.5);
+option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::stage1_perturb_glycan_com_rot_mag, "During Stage 1 conformation initialization, this is the magnitude for performing a random rotational Gaussian perturbation on the glycoligand's center-of-mass. Default = 7.5 (degrees)" ).def(7.5);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::stage1_torsion_uniform_pert_mag, "During Stage 1 conformation initialization, the magnitude used to perform a uniform perturbation on each phi, psi, and omega glycosidic torsion angle. Default = 12.5 (degrees). stage1_use_LinkageConformerMover must be false." ).def(12.5);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::mc_kt, "During Stage 2 docking and refinement, the value of kT used to accept or reject moves based on the Metropolis criterion. Default = 0.6" ).def(0.6);
 option.add( basic::options::OptionKeys::carbohydrates::glycan_dock::n_rigid_body_rounds, "During Stage 2 docking and refinement, the number of rigid-body sampling rounds to perform each cycle. Default = 8" ).def(8);
@@ -1025,7 +1021,6 @@ option.add( basic::options::OptionKeys::corrections::chemical::parse_charge, "Us
 option.add( basic::options::OptionKeys::corrections::chemical::expand_st_chi2sampling, "Ugly temporary hack.  Expand the chi2 sampling for serine and threonine in the fa_standard residue type set so that samples are taken every 20 degrees (instead of every 60 degrees.  This will soon be changed in the SER and THR params files themselves.  This flag can be used with any residue type set (including the pre-s fa_standard version, and with the fa_standard_05.2009_icoor version) but is unncessary for the talaris2013 version (currently named fa_standard) as the expanded SER and THR sampling is already encoded in .params files for these two residues" ).def(false);
 option.add( basic::options::OptionKeys::corrections::chemical::alternate_fullatom_ats, "Specify an alternate directory for the fullatom atom type set" );
 option.add( basic::options::OptionKeys::corrections::genpotential::genpotential, "genpotential option group" ).legal(true).def(true).is_group(true);
-option.add( basic::options::OptionKeys::corrections::genpotential::quick_lookup, "Use quick lookup in lookup_tors_params" ).def(false);
 option.add( basic::options::OptionKeys::corrections::genpotential::set_torsion_params, "Modify generic_bonded_potential torsion parameters (the ones in generic_bonded.round6p.txt) from the command line. Format is: -corrections:genpotential:set_torsion_params <atom-set1>:<atom_name1>:<atom_name2>:<atom_name3>:<atom_name4><param1>:<setting1>:<param2>:<setting2> ... For example: '-corrections:genpotential:set_torsion_params fa_standard:C*:CS:CS:C*:k1:0.0:k2:0.0:k3:0.077 fa_standard:CD:CS:CS:CD:k1:0.435:k2:0.039:k3:0.070' " );
 option.add( basic::options::OptionKeys::corrections::genpotential::set_special_torsion_params, "Modify generic_bonded_potential special torsion parameters (the ones in generic_bonded.round6p.txt) from the command line. Format is: -corrections:genpotential:set_special_torsion_params <atom-set1>:<atom_name1>:<atom_name2>:<atom_name3>:<atom_name4><param1>:<setting1>:<param2>:<setting2> ... For example: '-corrections:genpotential:set_special_torsion_params fa_standard:X:CRb:CRb:X:k1:0.000:k2:-0.226:k3:0.000:k4:0.093:k8:0.000 ' " );
 option.add( basic::options::OptionKeys::corrections::shapovalov_lib_fixes_enable, "Apply new code by Maxim Shapovalov from Dunbrack Lab such as for reading/using dun, rama, prop libraries in new format and options for applying different bug fixes. False value will employ old libraries and old code." ).def(true);
@@ -1174,16 +1169,16 @@ option.add( basic::options::OptionKeys::loops::extended, "Force extended on loop
 option.add( basic::options::OptionKeys::loops::remove_extended_loops, "Before building any loops, remove all loops marked as extended" ).legal(true).legal(false).def(false);
 option.add( basic::options::OptionKeys::loops::idealize_after_loop_close, "Run structure through idealizer after loop_closing" ).def(true);
 option.add( basic::options::OptionKeys::loops::idealize_before_loop_close, "Run structure through idealizer before loop_closing" ).def(true);
-option.add( basic::options::OptionKeys::loops::select_best_loop_from, "Keep building loops until N and choose best (by score)" ).def(1);
+
+}
+inline void add_rosetta_options_4( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::loops::select_best_loop_from, "Keep building loops until N and choose best (by score)" ).def(1);
 option.add( basic::options::OptionKeys::loops::build_attempts, "Build attempts per growth attempt" ).def(3);
 option.add( basic::options::OptionKeys::loops::grow_attempts, "Total loop growth attempts" ).def(7);
 option.add( basic::options::OptionKeys::loops::random_grow_loops_by, "Randomly grow loops by up to this number of residues on either side." ).def(0.0);
 option.add( basic::options::OptionKeys::loops::accept_aborted_loops, "accept aborted loops      " ).legal(true).legal(false).def(false);
 option.add( basic::options::OptionKeys::loops::strict_loops, "Do not allow growing of loops" ).legal(true).legal(false).def(false);
 option.add( basic::options::OptionKeys::loops::superimpose_native, "Superimpose the native over the core before calculating looprms" ).legal(true).legal(false).def(false);
-
-}
-inline void add_rosetta_options_4( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::loops::build_specific_loops, "Numbers of the loops to be built" );
+option.add( basic::options::OptionKeys::loops::build_specific_loops, "Numbers of the loops to be built" );
 option.add( basic::options::OptionKeys::loops::random_order, "build in random order     " ).legal(true).legal(false).def(true);
 option.add( basic::options::OptionKeys::loops::build_all_loops, "build all loops(no skip)  " ).legal(true).legal(false).def(false);
 option.add( basic::options::OptionKeys::loops::fa_closure_protocol, "Abrelax uses FASlidingWindowLoopClosure... " ).def(false);
@@ -1330,8 +1325,6 @@ option.add( basic::options::OptionKeys::mp::scoring::hbond, "Hydrogen bonding en
 option.add( basic::options::OptionKeys::mp::scoring::analytic_membetable_evaluation, "If true, membrane solvation energies will be calculated analytically, instead of ahead of time and stored in memb_etable" ).def(true);
 option.add( basic::options::OptionKeys::mp::setup::setup, "setup option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::mp::setup::spanfiles, "Spanning topology file from Octopus" );
-option.add( basic::options::OptionKeys::mp::setup::span1, "Spanning topology file for partner 1" );
-option.add( basic::options::OptionKeys::mp::setup::span2, "Spanning topology file for partner 2" );
 option.add( basic::options::OptionKeys::mp::setup::spans_from_structure, "Uses spanning topology computed from the PDB; requires the protein to be transformed into the membrane coordinate frame!" );
 option.add( basic::options::OptionKeys::mp::setup::lipsfile, "List of lips files by chain" ).def("mypdb.lips4");
 option.add( basic::options::OptionKeys::mp::setup::center, "membrane center x,y,z" );
@@ -1468,7 +1461,9 @@ option.add( basic::options::OptionKeys::sasa::sasa, "sasa option group" ).legal(
 option.add( basic::options::OptionKeys::sasa::method, "The method used to calculate sasa.  More will hopefully be added in the future." ).legal("LeGrand").def("LeGrand");
 option.add( basic::options::OptionKeys::sasa::include_hydrogens_explicitly, "Include hydrogens explicitly in the calculation.  Explicit vs implicit calculations use different radii sets.  These default sets can be controlled via cmd line.  Historically, calculations included hydrogens implicitly.  Some protocols may overwrite this setting to their needs." ).def(true);
 option.add( basic::options::OptionKeys::sasa::probe_radius, "Probe radius used by SasaCalc.  Default is radius of water.  1.2 is also commonly used." ).def(1.4);
-option.add( basic::options::OptionKeys::sasa::include_probe_radius_in_atom_radii, "This is typically done in calculation of SASA, and in fact is one of the defining features of SASA.  Turn this off to calculate the Surface Area instead." ).def(true);
+
+}
+inline void add_rosetta_options_5( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::sasa::include_probe_radius_in_atom_radii, "This is typically done in calculation of SASA, and in fact is one of the defining features of SASA.  Turn this off to calculate the Surface Area instead." ).def(true);
 option.add( basic::options::OptionKeys::sasa::include_only_C_S_in_hsasa, "Include only carbon or sulfer in hsasa calculation.  This is typical.  Only revert to false if excluding polar atoms by charge or everything will be counted as hydrophobic. Note hydrogens are dealt with automatically." ).def(true);
 option.add( basic::options::OptionKeys::sasa::exclude_polar_atoms_by_charge_in_hsasa, "Polar carbons and other atoms should not be included in hydrophobic hSASA - though historically they were.  Set this to false to get historic hsasa" ).def(false);
 option.add( basic::options::OptionKeys::sasa::polar_charge_cutoff, "Charge cutoff (abs value) to use on heavy atoms if excluding hydrophobic atoms from hSASA calculation by charge. The default is optimized for protein atom types (which excludes only carbonyl and carboxyl carbons.  By default only carbon and sulfer are excluded." ).def(.4);
@@ -1476,9 +1471,7 @@ option.add( basic::options::OptionKeys::sasa::implicit_hydrogen_radii_set, "The 
 option.add( basic::options::OptionKeys::sasa::explicit_hydrogen_radii_set, "The radii set to use when including hydrogens explicitly. Default is reduce, which was generally agreed upon at Minicon 2014 and come from original data from Bondi (1964) and Gavezzotti (1983) .  LJ are the Rosetta leonard-jones radii, which are not quite exactly from Charmm.  Legacy radii were optimized for a no-longer-in-Rosetta scoreterm (Jerry Tsai et al 2003)" ).legal("reduce").legal("LJ").legal("legacy").def("reduce");
 option.add( basic::options::OptionKeys::symmetry::symmetry, "symmetry option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::symmetry::symmetry_definition, "Text file describing symmetry setup" );
-
-}
-inline void add_rosetta_options_5( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::symmetry::reweight_symm_interactions, "Scale intersubunit interactions by a specified weight" ).def(1.0);
+option.add( basic::options::OptionKeys::symmetry::reweight_symm_interactions, "Scale intersubunit interactions by a specified weight" ).def(1.0);
 option.add( basic::options::OptionKeys::symmetry::initialize_rigid_body_dofs, "Initialize the RB dofs from the symmetry definition file?" ).def(false);
 option.add( basic::options::OptionKeys::symmetry::detect_bonds, "allow new cross subunit bond formation" ).def(true);
 option.add( basic::options::OptionKeys::symmetry::perturb_rigid_body_dofs, "(As in docking) Do a small perturbation of the symmetric DOFs: -perturb_rigid_body_dofs ANGSTROMS DEGREES" ).n(2);
@@ -1760,7 +1753,9 @@ option.add( basic::options::OptionKeys::boinc::score_cut_pct, "score cut done on
 option.add( basic::options::OptionKeys::boinc::score_cut_fl, "temp file where output is stored in" ).def("score_cut_tmp.out");
 option.add( basic::options::OptionKeys::boinc::score_cut_smart_throttle, "makes absolutely sure you are generating < 1 model per 60 seconds.(set to 65 sec to be safe)" );
 option.add( basic::options::OptionKeys::broker::broker, "broker option group" ).legal(true).def(true).is_group(true);
-option.add( basic::options::OptionKeys::broker::setup, "setup file for topology-broker" ).def("NO_SETUP_FILE");
+
+}
+inline void add_rosetta_options_6( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::broker::setup, "setup file for topology-broker" ).def("NO_SETUP_FILE");
 option.add( basic::options::OptionKeys::broker::rb_mover_stage1_weight, "weight of RB mover in abinitio stage 1" ).def(5.0);
 option.add( basic::options::OptionKeys::broker::large_frag_mover_stage1_weight, "weight of fragment mover in abinitio stage 1" ).def(1.0);
 option.add( basic::options::OptionKeys::broker::small_frag_mover_stage1_weight, "weight of fragment mover in abinitio stage 1" ).def(1.0);
@@ -1771,9 +1766,7 @@ option.add( basic::options::OptionKeys::bunsat_calc2::generous_hbonds, "Use gene
 option.add( basic::options::OptionKeys::bunsat_calc2::AHD_cutoff, "Minimum AHD angle for secondary geometry based h-bond detection" ).def(120);
 option.add( basic::options::OptionKeys::bunsat_calc2::dist_cutoff, "max dist" ).def(3.0);
 option.add( basic::options::OptionKeys::bunsat_calc2::hxl_dist_cutoff, "hxl max dist" ).def(3.5);
-
-}
-inline void add_rosetta_options_6( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::bunsat_calc2::sulph_dist_cutoff, "max sulph dist" ).def(3.3);
+option.add( basic::options::OptionKeys::bunsat_calc2::sulph_dist_cutoff, "max sulph dist" ).def(3.3);
 option.add( basic::options::OptionKeys::bunsat_calc2::metal_dist_cutoff, "max metal dist" ).def(2.7);
 option.add( basic::options::OptionKeys::canonical_sampling::canonical_sampling, "canonical_sampling option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::canonical_sampling::probabilities::probabilities, "probabilities option group" ).legal(true).def(true).is_group(true);
@@ -1902,7 +1895,6 @@ option.add( basic::options::OptionKeys::cluster::energy_based_clustering::silent
 option.add( basic::options::OptionKeys::cluster::energy_based_clustering::cst_file, "An optional, user-specified list of one or more constraints files.  Default unused." );
 option.add( basic::options::OptionKeys::cluster::energy_based_clustering::extra_rms_atoms, "A list of additional atoms to use in the RMSD calculation, each in the format residue:atomname separated by whitespace.  For example, -extra_rms_atoms 7:SG 12:CG 12:CD 12:CE 12:NZ 14:OG.  Default empty list." );
 option.add( basic::options::OptionKeys::cluster::energy_based_clustering::rebuild_all_in_dihedral_mode, "If true, full poses are rebuilt for output when clustering in dihedral mode.  If false, only backbones are written out.  True by default." ).def(true);
-option.add( basic::options::OptionKeys::cluster::energy_based_clustering::alternative_score_file, "A file containing one line per Structure with the pose input file name and an alternative score to sort by seperated by whitespace." );
 option.add( basic::options::OptionKeys::partial_thread::partial_thread, "partial_thread option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::partial_thread::skip_repack, "Do not repack sidechain missing density and idealize/optimize h-bonds" ).def(false);
 option.add( basic::options::OptionKeys::cm::cm, "cm option group" ).legal(true).def(true).is_group(true);
@@ -2053,7 +2045,9 @@ option.add( basic::options::OptionKeys::cyclic_peptide::cyclic_peptide, "cyclic_
 option.add( basic::options::OptionKeys::cyclic_peptide::cyclization_type, "The type of cyclization for the peptide (e.g. N-to-C amide bond, terminal disulfide, thioether lariat, isopeptide N-terminal lariat, etc." ).legal("n_to_c_amide_bond").legal("terminal_disulfide").legal("thioether_lariat").legal("nterm_isopeptide_lariat").legal("cterm_isopeptide_lariat").legal("sidechain_isopeptide").def("n_to_c_amide_bond");
 option.add( basic::options::OptionKeys::cyclic_peptide::use_chainbreak_energy, "If true, then the chainbreak energy is used to preserve any N-to-C peptide bond (assuming that this is an N-to-C cyclic peptide).  If false, then constraints are used instead.  True by default." ).def(true);
 option.add( basic::options::OptionKeys::cyclic_peptide::rand_checkpoint_file, "The name of the checkpoint file used for the random number generator.  Defaults to rng.state.gz.  Not used if the -cyclic_peptide:checkpoint_job_identifier flag isn't used." ).def("rng.state.gz");
-option.add( basic::options::OptionKeys::cyclic_peptide::checkpoint_file, "The name of the checkpoint file.  Defaults to checkpoint.txt.  Not used if the -cyclic_peptide:checkpoint_job_identifier flag isn't used." ).def("checkpoint.txt");
+
+}
+inline void add_rosetta_options_7( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::cyclic_peptide::checkpoint_file, "The name of the checkpoint file.  Defaults to checkpoint.txt.  Not used if the -cyclic_peptide:checkpoint_job_identifier flag isn't used." ).def("checkpoint.txt");
 option.add( basic::options::OptionKeys::cyclic_peptide::checkpoint_job_identifier, "A unique job name for checkpointing.  If none is provided, jobs are not checkpointed." ).def("");
 option.add( basic::options::OptionKeys::cyclic_peptide::exclude_residues_from_rms, "A list of residues that should be excluded from the RMSD calculation.  Not used if not provided." );
 option.add( basic::options::OptionKeys::cyclic_peptide::default_rama_sampling_table, "A custom rama table used for sampling, applied by default to all residues unless the --cyclic_peptide:rama_sampling_table_by_res flag overrides this.  Default unused (in which case the default rama tables for each residue type are used)." ).def("");
@@ -2066,9 +2060,7 @@ option.add( basic::options::OptionKeys::cyclic_peptide::use_rama_filter, "Should
 option.add( basic::options::OptionKeys::cyclic_peptide::rama_cutoff, "The maximum rama score value that's permitted in the accepted GenKIC solutions if the use_rama_filter option is passed to the simple_cycpep_predict app.  Default 0.8." ).def(0.8);
 option.add( basic::options::OptionKeys::cyclic_peptide::high_hbond_weight_multiplier, "In parts of the simple_cycpep_predict protocol involving upweighting of the backbone hbond terms, by what factor should backbone hbond energy be upweighted?  Default 10.0." ).def(10.0);
 option.add( basic::options::OptionKeys::cyclic_peptide::min_genkic_hbonds, "The minimum number of backbone hbonds for a solution to pass during GenKIC closure in the simple_cycpep_predict app.  Default 3." ).def(3.0);
-
-}
-inline void add_rosetta_options_7( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::cyclic_peptide::min_final_hbonds, "The minimum number of backbone hbonds for a solution to pass after final relaxtion in the simple_cycpep_predict app.  Default 0 (report only)." ).def(0.0);
+option.add( basic::options::OptionKeys::cyclic_peptide::min_final_hbonds, "The minimum number of backbone hbonds for a solution to pass after final relaxtion in the simple_cycpep_predict app.  Default 0 (report only)." ).def(0.0);
 option.add( basic::options::OptionKeys::cyclic_peptide::total_energy_cutoff, "An absolute energy threshold, above which solutions are discarded.  Unused if not specified." ).def(0.0);
 option.add( basic::options::OptionKeys::cyclic_peptide::hbond_energy_cutoff, "The mainchain hbond energy threshold for something to be counted as a hydrogen bond in the simple_cycpep_predict app.  Default -0.25." ).def(-0.25);
 option.add( basic::options::OptionKeys::cyclic_peptide::do_not_count_adjacent_res_hbonds, "When counting hydrogen bonds to a residue, should we skip hydrogen bonds to adjacent residues?  Default true." ).def(true);
@@ -2345,7 +2337,9 @@ option.add( basic::options::OptionKeys::docking::ensemble2, "turns on ensemble m
 option.add( basic::options::OptionKeys::docking::dock_mcm_trans_magnitude, "The magnitude of the translational perturbation during mcm in docking." ).shortd( "The magnitude of the translational perturbation during mcm in docking." ).def(0.1);
 option.add( basic::options::OptionKeys::docking::dock_mcm_rot_magnitude, "The magnitude of the rotational perturbation during mcm in docking." ).shortd( "The magnitude of the rotational perturbation during mcm in docking." ).def(5.0);
 option.add( basic::options::OptionKeys::docking::minimization_threshold, "Threhold for Rosetta to decide whether to minimize jump after a rigid_pert" ).shortd( "Threhold for Rosetta to decide whether to minimize jump after a rigid_pert" ).def(15);
-option.add( basic::options::OptionKeys::docking::temperature, "Temperature setting for the mc object during rigid-body docking" ).shortd( "Temperature setting for the mc object during rigid-body docking" ).def(0.8);
+
+}
+inline void add_rosetta_options_8( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::docking::temperature, "Temperature setting for the mc object during rigid-body docking" ).shortd( "Temperature setting for the mc object during rigid-body docking" ).def(0.8);
 option.add( basic::options::OptionKeys::docking::repack_period, "full repack period during dockingMCM" ).shortd( "full repack period during dockingMCM" ).def(8);
 option.add( basic::options::OptionKeys::docking::extra_rottrial, "extra rotamer trial after minimization" ).shortd( "extra rotamer trial after minimization" ).def(false);
 option.add( basic::options::OptionKeys::docking::dock_rtmin, "does rotamer trials with minimization, RTMIN" ).shortd( "does rotamer trials with minimization, RTMIN" ).def(false);
@@ -2361,9 +2355,7 @@ option.add( basic::options::OptionKeys::docking::SymDock_lowres_filter, "Manuall
 option.add( basic::options::OptionKeys::docking::multibody, "List of jumps allowed to move during docking" );
 option.add( basic::options::OptionKeys::docking::ignore_default_docking_task, "Allows the user to define another task to give to Docking and will ignore the default DockingTask.  Task will default to designing everything if no other TaskFactory is given to docking." ).shortd( "Ignore the DockingTask" ).def(false);
 option.add( basic::options::OptionKeys::docking::low_patch, "Name of weights patch file (without extension .wts) to use during rigid body " );
-
-}
-inline void add_rosetta_options_8( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::docking::high_patch, "Name of weights patch file (without extension .wts) to use during docking" );
+option.add( basic::options::OptionKeys::docking::high_patch, "Name of weights patch file (without extension .wts) to use during docking" );
 option.add( basic::options::OptionKeys::docking::high_min_patch, "Name of weights patch file (without extension .wts) to use during " );
 option.add( basic::options::OptionKeys::docking::pack_patch, "Name of weights patch file (without extension .wts) to use during packing" );
 option.add( basic::options::OptionKeys::docking::use_legacy_protocol, "Use the legacy high resolution docking algorithm for output compatibility." ).shortd( "Use the legacy high resolution docking algorithm." ).def(false);
@@ -2637,7 +2629,9 @@ option.add( basic::options::OptionKeys::fold_and_dock::slide_contact_frequency, 
 option.add( basic::options::OptionKeys::fold_cst::fold_cst, "fold_cst option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::fold_cst::constraint_skip_rate, "if e.g., 0.95 it will randomly select 5% if the constraints each round -- full-cst score in  extra column" ).def(0);
 option.add( basic::options::OptionKeys::fold_cst::violation_skip_basis, "local skip_rate is viol/base" ).def(100);
-option.add( basic::options::OptionKeys::fold_cst::violation_skip_ignore, "no skip for numbers below this level" ).def(10);
+
+}
+inline void add_rosetta_options_9( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::fold_cst::violation_skip_ignore, "no skip for numbers below this level" ).def(10);
 option.add( basic::options::OptionKeys::fold_cst::keep_skipped_csts, "final score only with active constraints" ).def(false);
 option.add( basic::options::OptionKeys::fold_cst::no_minimize, "No minimization moves in fold_constraints protocol. Useful for testing wheather fragment moves alone can recapitulate a given structure." ).def(false);
 option.add( basic::options::OptionKeys::fold_cst::force_minimize, "Minimization moves in fold_constraints protocol also if no constraints present" ).def(false);
@@ -2656,9 +2650,7 @@ option.add( basic::options::OptionKeys::fold_from_loops::native_ca_cst, "derive 
 option.add( basic::options::OptionKeys::fold_from_loops::swap_loops, "pdb of the target loops " ).def("--");
 option.add( basic::options::OptionKeys::fold_from_loops::checkpoint, "write/read checkpoint files for nstruct. Provide a checkpoint filename after this option." ).def("");
 option.add( basic::options::OptionKeys::fold_from_loops::ca_csts_dev, "standard deviation allowed to each constraint" ).def(0.5);
-
-}
-inline void add_rosetta_options_9( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::fold_from_loops::add_relax_cycles, "additional relax cycles" ).def(2);
+option.add( basic::options::OptionKeys::fold_from_loops::add_relax_cycles, "additional relax cycles" ).def(2);
 option.add( basic::options::OptionKeys::fold_from_loops::loop_mov_nterm, "Movable region inside the provided loop(nterm)" ).def(0);
 option.add( basic::options::OptionKeys::fold_from_loops::loop_mov_cterm, "Moveable region inside the provided loop(cterm)" ).def(0);
 option.add( basic::options::OptionKeys::fold_from_loops::ca_rmsd_cutoff, "Filter the decoys to pass the relax-design stage " ).def(5.0);
@@ -2929,7 +2921,9 @@ option.add( basic::options::OptionKeys::match::ligand_rotamer_index, "Match with
 option.add( basic::options::OptionKeys::match::enumerate_ligand_rotamers, "Match with all ligand rotamers specified in the multi-model 			.pdb file specified in the ligand's .params file by the PDB_ROTAMERS field.  This flag may not be used in 			combination with the match::ligand_rotamer_index flag.  Geometry of the ligand rotamers in the .pdb file will 			be idealized to the .params file bond angles and lengths." ).def(true);
 option.add( basic::options::OptionKeys::match::only_enumerate_non_match_redundant_ligand_rotamers, "Only defined if enumerate_ligand_rotamers is true 			this option causes the matcher to determine which rotamers in the ligand rotamer library are redundant in terms of matching, 			meaning the atoms they're matched through are superimposable. after having subdivided the ligand rotamer library into match-redundant 			subgroups, the matcher will then only place the first nonclashing rotamer from each subgroup. " ).def(true);
 option.add( basic::options::OptionKeys::match::dynamic_grid_refinement, "When too many hits land in the same 'connected component', requiring the 			enumeration of twoo many matches, refine the grid size to be smaller so that fewer matches have to be enumerated. 			This process works on individual connected components and is not applied to all regions of 6D.  This is significantly 			more efficient than enumerating all matches, while allowing the grid size to remain large and the rotamer and external 			geometry to remain dense. (*A connected component refers to " );
-option.add( basic::options::OptionKeys::match::build_round1_hits_twice, "Memory saving strategy that avoids paying for the storage of all the round-1 hits 			and instead records only what 6D voxels those hits fall in to.  Then the second round of matching proceeds storing only the hits that 			fall into the same voxels that the hits from the first round fell into.  Then the matcher goes back and generates the first-round hits 			again, but only keeps the ones that land into the same voxels that hits from round 2 fell into.  To be used, round 2 must also use the 			classic match algorithm (and must not use secondary matching)." ).def(false);
+
+}
+inline void add_rosetta_options_10( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::match::build_round1_hits_twice, "Memory saving strategy that avoids paying for the storage of all the round-1 hits 			and instead records only what 6D voxels those hits fall in to.  Then the second round of matching proceeds storing only the hits that 			fall into the same voxels that the hits from the first round fell into.  Then the matcher goes back and generates the first-round hits 			again, but only keeps the ones that land into the same voxels that hits from round 2 fell into.  To be used, round 2 must also use the 			classic match algorithm (and must not use secondary matching)." ).def(false);
 option.add( basic::options::OptionKeys::matdes::matdes, "matdes option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::matdes::num_subs_building_block, "The number of subunits in the oligomeric building block" ).def(1);
 option.add( basic::options::OptionKeys::matdes::num_subs_total, "The number of subunits in the target assembly" ).def(1);
@@ -2951,9 +2945,7 @@ option.add( basic::options::OptionKeys::matdes::design::grid_nsamp_radius, "The 
 option.add( basic::options::OptionKeys::matdes::design::fav_nat_bonus, "Bonus to be awarded to native residues" ).def(0.0);
 option.add( basic::options::OptionKeys::matdes::mutalyze::mutalyze, "mutalyze option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::matdes::mutalyze::calc_rot_boltz, "Specify whether to calculate RotamerBoltzmann probabilities or not" ).def(0);
-
-}
-inline void add_rosetta_options_10( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::matdes::mutalyze::ala_scan, "Specify whether to calculate ddGs for alanine-scanning mutants at the designed interface" ).def(1);
+option.add( basic::options::OptionKeys::matdes::mutalyze::ala_scan, "Specify whether to calculate ddGs for alanine-scanning mutants at the designed interface" ).def(1);
 option.add( basic::options::OptionKeys::matdes::mutalyze::revert_scan, "Specify whether to calculate ddGs for reversion mutants at the designed interface" ).def(1);
 option.add( basic::options::OptionKeys::matdes::mutalyze::min_rb, "Specify whether to minimize the rigid body DOFs" ).def(1);
 option.add( basic::options::OptionKeys::mc::mc, "mc option group" ).legal(true).def(true).is_group(true);
@@ -3196,40 +3188,6 @@ option.add( basic::options::OptionKeys::motifs::restrict_to_wt, "restrict the mo
 option.add( basic::options::OptionKeys::motifs::rerun_motifsearch, "setting the MotifSearch to run again, using the rotamers in the build position, most likely to change stringency or amino acid type on a second run" ).def(true);
 option.add( basic::options::OptionKeys::motifs::no_rotamer_bump, "skip the bump check when making the rotamers that will be tested for motif interactions, makes code much slower, but it is advised to increase the max_rotbump_energy to at least 10.0 instead of the default of 5.0 if bump_check is being used" ).def(false);
 option.add( basic::options::OptionKeys::motifs::ligand_motif_sphere, "option to specify radius of motif search around ligand" ).def(6.0);
-option.add( basic::options::OptionKeys::motifs::output_build_positions_only, "intended to trigger to only spit out build positions for protein and stop the program if true" ).def(false);
-option.add( basic::options::OptionKeys::motifs::specific_build_position, "read in for when collecting relevant motifs per build position, only collect motifs for this build position; intended for long motif lists where it will be best to run motif collection per build position in parallel" ).def(0);
-option.add( basic::options::OptionKeys::motifs::verbosity, "Boolean to indicate whether the user wants verbose output on motifs that are rejected in single_ligand_motif_from_stream from motif_utils.cc. This is for the version that does not kill the istream when a bad motif is encountered" ).def(false);
-option.add( basic::options::OptionKeys::motifs::params_directory_path, "User-inputted path to a directory where params files are located to be read into a script" ).def(" ");
-option.add( basic::options::OptionKeys::motifs::sdf_directory_path, "User-inputted path to a directory where sdf files are located to be read into a script" ).def(" ");
-option.add( basic::options::OptionKeys::motifs::mol2_directory_path, "User-inputted path to a directory where mol2 files are located to be read into a script" ).def(" ");
-option.add( basic::options::OptionKeys::motifs::mol2_file, "User-inputted name of mol2 file to be converted into a params file. Path to file can be included." ).def(" ");
-option.add( basic::options::OptionKeys::motifs::mol2_amino_acid, "set up params file for modified amino acid; .mol2 only; edit chis afterward." );
-option.add( basic::options::OptionKeys::motifs::params_custom_file_name, "String to be the name of the output params file (include any extension and pathing in this flag)" );
-option.add( basic::options::OptionKeys::motifs::ligand_3_letter_code, "Custom 3 letter code for ligand (will take first 3 letters from mol2 file otherwise)" );
-option.add( basic::options::OptionKeys::motifs::ligand_1_letter_code, "Custom 1 letter code for ligand (will take first letter from mol2 file otherwise)" );
-option.add( basic::options::OptionKeys::motifs::ligand_full_name, "Custom name of ligand" );
-option.add( basic::options::OptionKeys::motifs::write_param_to_pdb, "Bool to use in params file generation script to indicate to make a pdb file of the ligand (to compare to original mol2 and confirm successful translation)" ).def(false);
-option.add( basic::options::OptionKeys::motifs::protein_discovery_locus, "Value to indicate the index/locus that a user wants to run ligand discovery for on a protein" ).def(0);
-option.add( basic::options::OptionKeys::motifs::fa_rep_cutoff, "Value for ligand discovery cutoff for fa_rep score" ).def(0);
-option.add( basic::options::OptionKeys::motifs::fa_atr_cutoff, "Value for ligand discovery cutoff for fa_atr score" ).def(0);
-option.add( basic::options::OptionKeys::motifs::output_ligand_pdb, "Optional flag to choose to output read in ligands back out as pdb files. Useful for debugging as well as getting an original ligand in the original placement location for the RMSD calculations" ).def(false);
-option.add( basic::options::OptionKeys::motifs::check_new_param_file, "Decide whether to test a generated params file and make sure it was accurately converted (time consumming operation)" ).def(false);
-option.add( basic::options::OptionKeys::motifs::ddg_cutoff, "Real value to be used as a cutoff for keeping placed ligands. Optimized placement must be better (smaller) than cutoff. Using very large default value for ease in implementing the filter variable" ).def(1000000);
-option.add( basic::options::OptionKeys::motifs::best_pdbs_to_keep, "Size to determine the number of placed ligands to keep and output as pdbs. Default value of 0 indicates to keep any that make it to ddg evaluation (could be a lot)" ).def(0);
-option.add( basic::options::OptionKeys::motifs::resolution_scale_factor, "Scale for resolution of holes analysis protocol. Resolution is defaulted to 1 cubic angstrom. This variable is inversely proportional to the linear magnitude of the resolution. I.e. factor = 1 --> resolution = 1A^3 (cube side length = 1/1); factor = 2 --> resolution = 0.125A^3 (cube side length = 1/2) " ).def(1);
-option.add( basic::options::OptionKeys::motifs::x_min_holes, "If going to investigate a sub_region of a pdb, this defines the min x value of the region" );
-option.add( basic::options::OptionKeys::motifs::x_max_holes, "If going to investigate a sub_region of a pdb, this defines the max x value of the region" );
-option.add( basic::options::OptionKeys::motifs::y_min_holes, "If going to investigate a sub_region of a pdb, this defines the min y value of the region" );
-option.add( basic::options::OptionKeys::motifs::y_max_holes, "If going to investigate a sub_region of a pdb, this defines the max y value of the region" );
-option.add( basic::options::OptionKeys::motifs::z_min_holes, "If going to investigate a sub_region of a pdb, this defines the min z value of the region" );
-option.add( basic::options::OptionKeys::motifs::z_max_holes, "If going to investigate a sub_region of a pdb, this defines the max z value of the region" );
-option.add( basic::options::OptionKeys::motifs::highresdocker_allow_minimization, "Bool to indicate whether to allow (true) minimization or not (false) in the apply function of HighResDocker" ).def(true);
-option.add( basic::options::OptionKeys::motifs::highresdocker_allow_repacking, "Boolean in ligand_docking/HighResDocker to prevent apply function from repacking. Often want value to be true, but this allows option to make it false." ).def(true);
-option.add( basic::options::OptionKeys::motifs::highresdocker_use_all_residues, "Boolean in ligand_docking/HighResDocker to determine whether to use all residues in generation of packer_task." ).def(false);
-option.add( basic::options::OptionKeys::motifs::ligand_motif_output_directory_name, "Name the directory to which motif pdbs will be outputted to, default of location where script is called. Follow a directory name with a /." ).def("");
-option.add( basic::options::OptionKeys::motifs::ligand_motif_output_file_name, "Name the file to which motifs will be outputted to, default of a local directory named AllMattMotifs.motifs. If file type extension not specified (identified as the last period encountered), will output to a file type ending in .motifs" ).def("AllMattMotifs.motifs");
-option.add( basic::options::OptionKeys::motifs::output_motifs_as_pdb, "Output generated motifs as pdb files" ).def(true);
-option.add( basic::options::OptionKeys::motifs::output_motifs, "Output generated motifs as .motifs file and to a MotifLibrary" ).def(true);
 option.add( basic::options::OptionKeys::ms::ms, "ms option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::ms::pop_from_ss, "generate starting sequence population based on single-state design results" ).def(0);
 option.add( basic::options::OptionKeys::ms::pop_size, "genetic algorithm population size" ).def(100);
@@ -3246,9 +3204,7 @@ option.add( basic::options::OptionKeys::ms::checkpoint::interval, "frequency wit
 option.add( basic::options::OptionKeys::ms::checkpoint::gz, "compress checkpoing files with gzip" ).def(false);
 option.add( basic::options::OptionKeys::ms::checkpoint::rename, "rename checkpoint files after genetic algorithm completes" ).def(false);
 option.add( basic::options::OptionKeys::mutate::mutate, "mutate option group" ).legal(true).def(true).is_group(true);
-
-}
-inline void add_rosetta_options_11( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::mutate::mutation, "Vector of single mutations: Format: One-letter code / residue number / one-letter code. Example: A163F" );
+option.add( basic::options::OptionKeys::mutate::mutation, "Vector of single mutations: Format: One-letter code / residue number / one-letter code. Example: A163F" );
 option.add( basic::options::OptionKeys::mutate::mutant_file, "Input file containing mutations" );
 option.add( basic::options::OptionKeys::nmr::nmr, "nmr option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::nmr::pcs::pcs, "pcs option group" ).legal(true).def(true).is_group(true);
@@ -3257,7 +3213,9 @@ option.add( basic::options::OptionKeys::nmr::pcs::nls_repeats, "Number of repeat
 option.add( basic::options::OptionKeys::nmr::pcs::optimize_tensor, "Optimize the lanthanide ion position and other parameters of the PCS tensor after grid search." ).def(false);
 option.add( basic::options::OptionKeys::nmr::pcs::multiset_weights, "Vector of weights of PCSMultiSets. One PCSMultiSet refers to data collected for multiple lanthanides at one tagging site." ).n_lower(0).n_upper(100);
 option.add( basic::options::OptionKeys::nmr::pcs::normalize_data, "Normalize PCS data of every experiment by their standard deviation." ).def(false);
-option.add( basic::options::OptionKeys::nmr::pcs::use_symmetry_calc, "Consider the contribution from symmetric subunits for PCS calculation. Only the PCSs of the asymmetric subunit must to be provided as input. The symmetric residues are deduced from the symmetry information carried by the pose. Alternatively, one can provide all residues contributing to one PCS as an ambiguous atom selection in the input file." ).def(false);
+
+}
+inline void add_rosetta_options_11( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::nmr::pcs::use_symmetry_calc, "Consider the contribution from symmetric subunits for PCS calculation. Only the PCSs of the asymmetric subunit must to be provided as input. The symmetric residues are deduced from the symmetry information carried by the pose. Alternatively, one can provide all residues contributing to one PCS as an ambiguous atom selection in the input file." ).def(false);
 option.add( basic::options::OptionKeys::nmr::pcs::show_info, "Show additional information about PCS calculation (experimental vs. back-calculated PCSs and PCS tensor summary) at the end of every ab-initio folding stage." ).def(false);
 option.add( basic::options::OptionKeys::nmr::rdc::rdc, "rdc option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::nmr::rdc::input_file, "RDC input file." );
@@ -3541,15 +3499,15 @@ option.add( basic::options::OptionKeys::fingerprint::add_esp, "add electrostatic
 option.add( basic::options::OptionKeys::fingerprint::darc_shape_only, "darc with shape only" ).def(false);
 option.add( basic::options::OptionKeys::fingerprint::darc_elsts_only, "darc with electrostatics only" ).def(false);
 option.add( basic::options::OptionKeys::fingerprint::esp_weight, "add weight for electrostatic energy" ).def(0.117);
-
-}
-inline void add_rosetta_options_12( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::fingerprint::esp_protein_wt, "add weight for electrostatic energy inside protein" ).def(0);
+option.add( basic::options::OptionKeys::fingerprint::esp_protein_wt, "add weight for electrostatic energy inside protein" ).def(0);
 option.add( basic::options::OptionKeys::fingerprint::esp_surface_wt, "add weight for electrostatic energy on protein surface" ).def(0);
 option.add( basic::options::OptionKeys::fingerprint::delphi_grid, "input electrostatic potential grid if from DELPHI, default is ZAP grid" ).def(false);
 option.add( basic::options::OptionKeys::fingerprint::cap_e_potential, "max/min value to cap electrostatic potential" ).def(10.0);
 option.add( basic::options::OptionKeys::fingerprint::return_zero_darc_score, "return 0 as darc score" ).def(false);
 option.add( basic::options::OptionKeys::fingerprint::set_surface_esp_to_zero, "set surface electrostatic potential to zero" ).def(false);
-option.add( basic::options::OptionKeys::fingerprint::set_protein_esp_to_zero, "set protein electrostatic potential to zero" ).def(false);
+
+}
+inline void add_rosetta_options_12( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::fingerprint::set_protein_esp_to_zero, "set protein electrostatic potential to zero" ).def(false);
 option.add( basic::options::OptionKeys::fingerprint::inp_lig, "inp_lig" ).def("inp_lig.pdb");
 option.add( basic::options::OptionKeys::fingerprint::ref_lig, "ref_lig" ).def("ref_lig.pdb");
 option.add( basic::options::OptionKeys::ProQ::ProQ, "ProQ option group" ).legal(true).def(true).is_group(true);
@@ -3611,9 +3569,6 @@ option.add( basic::options::OptionKeys::hydrate::show_residues_near_water, "Prin
 option.add( basic::options::OptionKeys::hydrate::only_remove_non_buried_waters, "Remove non-buried waters from input, then exit." ).def(false);
 option.add( basic::options::OptionKeys::hydrate::just_score, "Just score the input structures with the hybrid solvation protocol." ).def(false);
 option.add( basic::options::OptionKeys::hydrate::show_rotamer_count, "Output the rotamer counts for each water and amino acid, then exit." ).def(false);
-option.add( basic::options::OptionKeys::hydrate::remove_de_novo_waters, "Remove de novo waters from pose/PDB at the end of RemoveWaters protocol." ).def(false);
-option.add( basic::options::OptionKeys::hydrate::remove_far_away_waters, "Remove far away waters from pose/PDB at the end of RemoveWaters protocol." ).def(false);
-option.add( basic::options::OptionKeys::hydrate::remove_non_buried_waters, "Remove non buried waters from pose/PDB at the end of RemoveWaters protocol." ).def(false);
 option.add( basic::options::OptionKeys::hydrate::protein_flexibility, "Defines the protein flexibility during the run" ).legal("not").legal("all").legal("resfile").legal("near_water").def("not");
 option.add( basic::options::OptionKeys::hydrate::near_water_threshold, "Threshold for res to be considered flexible when using the near_water option in -hydrate:protein_flexibility" ).def(4.0);
 option.add( basic::options::OptionKeys::hydrate::minimize_bb_where_packing, "Allow backbone to move when minimizing." ).def(false);
@@ -3836,15 +3791,15 @@ option.add( basic::options::OptionKeys::resample::resample, "resample option gro
 option.add( basic::options::OptionKeys::resample::silent, "a silent file for decoys to restart sampling from " ).def("");
 option.add( basic::options::OptionKeys::resample::tag, "which decoy to select from silent file " ).def("");
 option.add( basic::options::OptionKeys::resample::stage1, "if true restart after stage1, otherwise after stage2 " ).def(false);
-
-}
-inline void add_rosetta_options_13( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::resample::stage2, "if true restart after stage1, otherwise after stage2 " ).def(false);
+option.add( basic::options::OptionKeys::resample::stage2, "if true restart after stage1, otherwise after stage2 " ).def(false);
 option.add( basic::options::OptionKeys::resample::jumps, "if true restart after stage1, otherwise after stage2 " ).def(false);
 option.add( basic::options::OptionKeys::resample::min_max_start_seq_sep, "range of (random) start values for seq-separation" ).def(0);
 option.add( basic::options::OptionKeys::rescore::rescore, "rescore option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::rescore::assign_ss, "Invoke DSSP to assign secondary structure." ).def(false);
 option.add( basic::options::OptionKeys::rescore::skip, "Dont actually call scoring function (i.e. get evaluators only)" );
-option.add( basic::options::OptionKeys::rescore::verbose, "Full break down of weights, raw scores and weighted scores ?" );
+
+}
+inline void add_rosetta_options_13( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::rescore::verbose, "Full break down of weights, raw scores and weighted scores ?" );
 option.add( basic::options::OptionKeys::rna::rna, "rna option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::rna::corrected_geo, "Use PHENIX-based RNA sugar close energy and params files" ).def(true);
 option.add( basic::options::OptionKeys::rna::vary_geometry, "Let bond lengths and angles vary from ideal in minimizer" ).def(false);
@@ -4131,12 +4086,12 @@ option.add( basic::options::OptionKeys::stepwise::move, "For SWM. Format: 'ADD 5
 option.add( basic::options::OptionKeys::stepwise::min_type, "Minimizer type" ).legal("linmin").legal("linmin_iterated").legal("linmin_iterated_atol").legal("dfpmin").legal("dfpmin_armijo").legal("dfpmin_armijo_nonmonotone").legal("dfpmin_atol").legal("dfpmin_armijo_atol").legal("dfpmin_armijo_nonmonoton_atol").legal("dfpmin_strong_wolfe").legal("dfpmin_strong_wolfe_atol").legal("lbfgs_armijo").legal("lbfgs_armijo_rescored").legal("lbfgs_armijo_atol").legal("lbfgs_armijo_nonmonotone").legal("lbfgs_armijo_nonmonotone_atol").legal("lbfgs_strong_wolfe").legal("cmaes").def("lbfgs_armijo_nonmonotone");
 option.add( basic::options::OptionKeys::stepwise::min_tolerance, "Minimizer tolerance" ).def(0.000025);
 option.add( basic::options::OptionKeys::stepwise::output_minimized_pose_list, "Use legacy output that puts out all minimized poses; set to true in legacy SWA" ).def(false);
-
-}
-inline void add_rosetta_options_14( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::stepwise::virtualize_free_moieties_in_native, "Virtualize bulges, terminal phosphates, and 2' hydroxyls detected to be non-interacting ('free') in native pose. I.e., do not calculate RMSD over those atoms." ).def(true);
+option.add( basic::options::OptionKeys::stepwise::virtualize_free_moieties_in_native, "Virtualize bulges, terminal phosphates, and 2' hydroxyls detected to be non-interacting ('free') in native pose. I.e., do not calculate RMSD over those atoms." ).def(true);
 option.add( basic::options::OptionKeys::stepwise::output_cluster_size, "Output cluster_size in StepWiseClusterer as an extra score in the pose" ).def(false);
 option.add( basic::options::OptionKeys::stepwise::lores, "Use coarse-grained energy function to sample; no minimize." ).def(false);
-option.add( basic::options::OptionKeys::stepwise::verbose_sampler, "verbose output from StepWiseConnectionSampler sample-and-screen." ).def(false);
+
+}
+inline void add_rosetta_options_14( utility::options::OptionCollection &option ) {option.add( basic::options::OptionKeys::stepwise::verbose_sampler, "verbose output from StepWiseConnectionSampler sample-and-screen." ).def(false);
 option.add( basic::options::OptionKeys::stepwise::pack_protein_side_chains, "allow neighboring protein side chains to be packed." ).def(true);
 option.add( basic::options::OptionKeys::stepwise::definitely_virtualize, "definitely virtualize these residues (by seqpos)" ).def();
 option.add( basic::options::OptionKeys::stepwise::force_moving_res_for_erraser, "For ERRASER resample moves, ENSURE that the appropriate residue is moving" ).def(false);
@@ -4712,8 +4667,6 @@ option.add( basic::options::OptionKeys::PDB_diagnostic::skip_pack_and_min, "Skip
 option.add( basic::options::OptionKeys::testing::testing, "testing option group" ).legal(true).def(true).is_group(true);
 option.add( basic::options::OptionKeys::testing::HCF, "Cause Rosetta to exit immediately with an error." ).def(false);
 option.add( basic::options::OptionKeys::testing::INTEGRATION_TEST, "Meta flag for best-practices flags in integration tests. Don't use on actual runs." ).def(false);
-option.add( basic::options::OptionKeys::solvent_exposure::solvent_exposure, "solvent_exposure option group" ).legal(true).def(true).is_group(true);
-option.add( basic::options::OptionKeys::solvent_exposure::method, "Method to calculate neighbor count, sphere or cone." ).legal("cone").legal("sphere").def("sphere");
 
 }
 
