@@ -215,8 +215,6 @@ append_single_far_away_water(
 	core::pose::Pose & pose
 );
 
-
-
 } // close hydrate
 } // close hydrate
 

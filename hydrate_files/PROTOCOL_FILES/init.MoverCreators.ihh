@@ -1,0 +1,670 @@
+// -*- mode:c++;tab-width:2;indent-tabs-mode:t;show-trailing-whitespace:t;rm-trailing-spaces:t -*-
+// vi: set ts=2 noet:
+//
+// (c) Copyright Rosetta Commons Member Institutions.
+// (c) This file is part of the Rosetta software suite and is made available under license.
+// (c) The Rosetta software is developed by the contributing members of the Rosetta Commons.
+// (c) For more information, see http://www.rosettacommons.org. Questions about this can be
+// (c) addressed to University of Washington CoMotion, email: license@uw.edu.
+
+/// @file   src/protocols/init/init.MoverCreators.ihh
+/// @brief  Creator #includes for Movers for init
+/// @author Steven Lewis smlewi@gmail.com
+
+
+//MoverCreator #includes
+#include <protocols/moves/MoverFactory.hh>
+
+// KEEP IN ALPHABETICAL ORDER!
+
+// A //////////////////////////////////////////////////////////////////////////
+#include <protocols/aa_composition/AddCompositionConstraintMoverCreator.hh>
+#include <protocols/aa_composition/AddMHCEpitopeConstraintMoverCreator.hh>
+#include <protocols/aa_composition/AddNetChargeConstraintMoverCreator.hh>
+#include <protocols/aa_composition/AddHelixSequenceConstraintsMoverCreator.hh>
+#include <protocols/aa_composition/ClearCompositionConstraintsMoverCreator.hh>
+
+#include <protocols/abinitio/DomainAssemblyCreator.hh>
+
+#include <protocols/abinitio/abscript/AbscriptMoverCreator.hh>
+#include <protocols/abinitio/abscript/ConstraintPreparerCreator.hh>
+#include <protocols/abinitio/abscript/FragmentCMCreator.hh>
+#include <protocols/abinitio/abscript/FragmentJumpCMCreator.hh>
+#include <protocols/abinitio/abscript/AbscriptLoopCloserCMCreator.hh>
+#include <protocols/abinitio/abscript/StructPerturberCMCreator.hh>
+#include <protocols/abinitio/abscript/RigidChunkCMCreator.hh>
+
+#include <protocols/analysis/GlycanInfoMoverCreator.hh>
+#include <protocols/analysis/InterfaceAnalyzerMoverCreator.hh>
+#include <protocols/analysis/LoopAnalyzerMoverCreator.hh>
+
+#include <protocols/analysis/simple_metrics/RunSimpleMetricsMoverCreator.hh>
+
+#include <protocols/antibody/AntibodyCDRGrafterCreator.hh>
+#include <protocols/antibody/AntibodyNumberingConverterMoverCreator.hh>
+
+#include <protocols/antibody/constraints/CDRDihedralConstraintMoverCreator.hh>
+#include <protocols/antibody/constraints/ParatopeEpitopeSiteConstraintMoverCreator.hh>
+#include <protocols/antibody/constraints/ParatopeSiteConstraintMoverCreator.hh>
+
+#include <protocols/antibody/design/AntibodyDesignMoverCreator.hh>
+
+#include <protocols/antibody/snugdock/SnugDockCreator.hh>
+
+// B //////////////////////////////////////////////////////////////////////////
+#include <protocols/backbone_moves/RandomizeBBByRamaPreProCreator.hh>
+#include <protocols/backbone_moves/local_backbone_mover/LocalBackboneMoverCreator.hh>
+#include <protocols/backrub/BackrubMoverCreator.hh>
+#include <protocols/backrub/BackrubProtocolCreator.hh>
+#include <protocols/backrub/BackrubSidechainMoverCreator.hh>
+
+
+// C //////////////////////////////////////////////////////////////////////////
+#include <protocols/canonical_sampling/MetricRecorderCreator.hh>
+#include <protocols/canonical_sampling/MetropolisHastingsMoverCreator.hh>
+#include <protocols/canonical_sampling/ParallelTemperingCreator.hh>
+#include <protocols/canonical_sampling/HamiltonianExchangeCreator.hh>
+#include <protocols/canonical_sampling/PDBTrajectoryRecorderCreator.hh>
+#include <protocols/canonical_sampling/SilentTrajectoryRecorderCreator.hh>
+#include <protocols/canonical_sampling/SimulatedTemperingCreator.hh>
+#include <protocols/canonical_sampling/TrialCounterObserverCreator.hh>
+
+#include <protocols/carbohydrates/CreateGlycanSequonMoverCreator.hh>
+#include <protocols/carbohydrates/GlycanSamplerCreator.hh>
+#include <protocols/carbohydrates/GlycanTreeMinMoverCreator.hh>
+#include <protocols/carbohydrates/GlycanTreeModelerCreator.hh>
+#include <protocols/carbohydrates/LinkageConformerMoverCreator.hh>
+#include <protocols/carbohydrates/IdealizeAnomericHydrogensCreator.hh>
+#include <protocols/carbohydrates/RingPlaneFlipMoverCreator.hh>
+#include <protocols/carbohydrates/SimpleGlycosylateMoverCreator.hh>
+#include <protocols/carbohydrates/TautomerizeAnomerMoverCreator.hh>
+
+#include <protocols/chemically_conjugated_docking/UBQ_GTPaseMoverCreator.hh>
+
+#include <protocols/relax/loop/LoopRelaxMoverCreator.hh>
+
+#include <protocols/constraint_generator/AddConstraintsCreator.hh>
+#include <protocols/constraint_generator/RemoveConstraintsCreator.hh>
+
+#include <protocols/constraint_movers/AddConstraintsToCurrentConformationMoverCreator.hh>
+#include <protocols/constraint_movers/ClearConstraintsMoverCreator.hh>
+#include <protocols/constraint_movers/ConstraintSetMoverCreator.hh>
+#include <protocols/constraint_movers/CstInfoMoverCreator.hh>
+
+#include <protocols/contact_map/ContactMapCreator.hh>
+#include <protocols/coupled_moves/CoupledMovesProtocolCreator.hh>
+
+#include <protocols/cryst/cryst_movers_creator.hh>
+#include <protocols/cryst/refinable_lattice_creator.hh>
+
+#include <protocols/cyclic_peptide/CrankshaftFlipMoverCreator.hh>
+#include <protocols/cyclic_peptide/CreateAngleConstraintCreator.hh>
+#include <protocols/cyclic_peptide/CreateDistanceConstraintCreator.hh>
+#include <protocols/cyclic_peptide/CreateTorsionConstraintCreator.hh>
+#include <protocols/cyclic_peptide/CrosslinkerMoverCreator.hh>
+#include <protocols/cyclic_peptide/CycpepRigidBodyPermutationMoverCreator.hh>
+#include <protocols/cyclic_peptide/PeptideCyclizeMoverCreator.hh>
+#include <protocols/cyclic_peptide/PeptideStubMoverCreator.hh>
+#include <protocols/cyclic_peptide/SymmetricCycpepAlignCreator.hh>
+#include <protocols/cyclic_peptide/TryDisulfPermutationsCreator.hh>
+#include <protocols/cyclic_peptide/FlipChiralityMoverCreator.hh>
+
+// D //////////////////////////////////////////////////////////////////////////
+#include <protocols/denovo_design/movers/AddSegmentDataMoverCreator.hh>
+#include <protocols/denovo_design/movers/AlignResiduesMoverCreator.hh>
+#include <protocols/denovo_design/movers/BridgeChainsMoverCreator.hh>
+#include <protocols/denovo_design/movers/FoldArchitectMoverCreator.hh>
+#include <protocols/denovo_design/movers/DeclareStructureDataCovalentBondMoverCreator.hh>
+#include <protocols/denovo_design/movers/DisulfidizeMoverCreator.hh>
+#include <protocols/denovo_design/movers/ExtendChainMoverCreator.hh>
+#include <protocols/denovo_design/movers/FastDesignCreator.hh>
+#include <protocols/denovo_design/movers/MakeAsymmetricStructureDataMoverCreator.hh>
+#include <protocols/denovo_design/movers/SetResidueAliasMoverCreator.hh>
+
+#include <protocols/design_opt/GreedyOptMutationMoverCreator.hh>
+
+#include <protocols/dna/DesignProteinBackboneAroundDNACreator.hh>
+#include <protocols/dna/DnaInterfaceMinMoverCreator.hh>
+#include <protocols/dna/DnaInterfaceMultiStateDesignCreator.hh>
+#include <protocols/dna/DnaInterfacePackerCreator.hh>
+#include <protocols/dna/SeparateDnaFromNonDnaCreator.hh>
+
+#include <protocols/docking/ConformerSwitchMoverCreator.hh>
+#include <protocols/docking/DockingPrepackProtocolCreator.hh>
+#include <protocols/docking/DockingProtocolCreator.hh>
+#include <protocols/docking/DockingHighResLegacyCreator.hh>
+#include <protocols/docking/DockingInitialPerturbationCreator.hh>
+#include <protocols/docking/DockMCMProtocolCreator.hh>
+#include <protocols/docking/DockMinMoverCreator.hh>
+#include <protocols/docking/DockSetupMoverCreator.hh>
+#include <protocols/docking/DockingSlideIntoContactCreator.hh>
+#include <protocols/docking/EnsureExclusivelySharedJumpMoverCreator.hh>
+
+
+#include <protocols/docking/membrane/MPDockingMoverCreator.hh>
+#include <protocols/docking/membrane/MPDockingSetupMoverCreator.hh>
+
+#include <protocols/drug_design/ApplyChemistryMoverCreator.hh>
+#include <protocols/drug_design/bcl/BCLFragmentMutateMoverCreator.hh>
+#include <protocols/drug_design/RDKitMetricsMoverCreator.hh>
+
+// E //////////////////////////////////////////////////////////////////////////
+#include <protocols/electron_density/SetupForDensityScoringMoverCreator.hh>
+#include <protocols/electron_density/BfactorFittingMoverCreator.hh>
+#include <protocols/electron_density/VoxelSpacingRefinementMoverCreator.hh>
+#include <protocols/electron_density/ScaleMapIntensitiesCreator.hh>
+#include <protocols/electron_density/ReportFSCCreator.hh>
+#include <protocols/electron_density/DensityZscoresCreator.hh>
+
+#include <protocols/environment/EnvMoverCreator.hh>
+#include <protocols/environment/CoMTrackerCMCreator.hh>
+#include <protocols/environment/ScriptCMCreator.hh>
+
+#include <protocols/enzdes/AddOrRemoveMatchCstsCreator.hh>
+#include <protocols/enzdes/BackboneSamplerCreator.hh>
+#include <protocols/enzdes/EnzdesMoversCreator.hh>
+#include <protocols/enzdes/EnzRepackMinimizeCreator.hh>
+#include <protocols/enzdes/PackRotamersMoverPartGreedyCreator.hh>
+
+#include <protocols/enzymatic_movers/DNAMethyltransferaseMoverCreator.hh>
+#include <protocols/enzymatic_movers/GlycosyltransferaseMoverCreator.hh>
+#include <protocols/enzymatic_movers/KinaseMoverCreator.hh>
+#include <protocols/enzymatic_movers/NTerminalAcetyltransferaseMoverCreator.hh>
+
+#include <protocols/evolution/EvolutionaryDynamicsMoverCreator.hh>
+#include <protocols/evolution/NucleotideMutationCreator.hh>
+
+
+// F //////////////////////////////////////////////////////////////////////////
+#include <protocols/farnesyl/SampleFarnesylMoverCreator.hh>
+#include <protocols/farnesyl/InstallFarnesylMoverCreator.hh>
+
+#include <protocols/features/InterfaceDdGMoverCreator.hh>
+#include <protocols/features/ReportToDBCreator.hh>
+#include <protocols/features/TrajectoryReportToDBCreator.hh>
+
+#include <protocols/fldsgn/BluePrintBDRCreator.hh>
+#include <protocols/fldsgn/CircularPermutationCreator.hh>
+#include <protocols/fldsgn/MatchResiduesMoverCreator.hh>
+#include <protocols/fldsgn/SheetRemodelConstraintGeneratorCreator.hh>
+
+#include <protocols/fldsgn/potentials/SetAACompositionPotentialCreator.hh>
+#include <protocols/fldsgn/potentials/SetSecStructEnergiesCreator.hh>
+
+#include <protocols/flexpep_docking/FlexPepDockingProtocolCreator.hh>
+
+#include <protocols/flxbb/FlxbbDesignCreator.hh>
+#include <protocols/flxbb/InterlockAromaCreator.hh>
+
+#include <protocols/fold_from_loops/movers/AlignByResidueSelectorMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/DisplayPoseLabelsMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/ReleaseConstraintFromResidueMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/SplitAndMixPoseMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/LabelPoseFromResidueSelectorMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/ResidueLabelsToPymolSelectionMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/SavePDBInfoMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/MoveMapFactoryToNamedMoveMapMoverCreator.hh>
+#include <protocols/fold_from_loops/movers/NubInitioLoopClosureMoverCreator.hh>
+#include <protocols/fold_from_loops/NubInitioMoverCreator.hh>
+
+#include <protocols/forge/constraints/InverseRotamersCstGeneratorCreator.hh>
+#include <protocols/forge/constraints/InvrotTreeCstGeneratorCreator.hh>
+#include <protocols/forge/constraints/NtoCConstraintGeneratorCreator.hh>
+#include <protocols/forge/constraints/RemoveRemodelCstsCreator.hh>
+
+#include <protocols/forge/remodel/RemodelMoverCreator.hh>
+#include <protocols/forge/remodel/ResidueVicinityCstGeneratorCreator.hh>
+
+// G //////////////////////////////////////////////////////////////////////////
+#include <protocols/generalized_kinematic_closure/GeneralizedKICCreator.hh>
+
+#include <protocols/glycopeptide_docking/GlycopeptideDockingProtocolCreator.hh>
+#include <protocols/glycan_docking/GlycanDockProtocolCreator.hh>
+#include <protocols/grafting/AnchoredGraftMoverCreator.hh>
+#include <protocols/grafting/CCDEndsGraftMoverCreator.hh>
+#include <protocols/grafting/simple_movers/DeleteRegionMoverCreator.hh>
+#include <protocols/grafting/simple_movers/InsertPoseIntoPoseMoverCreator.hh>
+#include <protocols/grafting/simple_movers/ReplaceRegionMoverCreator.hh>
+#include <protocols/grafting/simple_movers/KeepRegionMoverCreator.hh>
+
+// H //////////////////////////////////////////////////////////////////////////
+#include <protocols/hbnet/HBNetCreator.hh>
+#include <protocols/hbnet/HBNetStapleInterfaceCreator.hh>
+
+#include <protocols/helical_bundle/BackboneGridSamplerCreator.hh>
+#include <protocols/helical_bundle/BundleGridSamplerCreator.hh>
+#include <protocols/helical_bundle/FitSimpleHelixCreator.hh>
+#include <protocols/helical_bundle/MakeBundleCreator.hh>
+#include <protocols/helical_bundle/MakeBundleHelixCreator.hh>
+#include <protocols/helical_bundle/PerturbBundleCreator.hh>
+#include <protocols/helical_bundle/PerturbBundleHelixCreator.hh>
+
+#include <protocols/hotspot_hashing/movers/PlaceSurfaceProbeCreator.hh>
+
+#include <protocols/hybridization/HybridizeProtocolCreator.hh>
+//#include <protocols/hybridization/HybridizeSetupMoverCreator.hh>
+//#include <protocols/hybridization/FoldTreeHybridizeCreator.hh>
+//#include <protocols/hybridization/CartesianHybridizeCreator.hh>
+#include <protocols/hybridization/BackboneTorsionSamplerCreator.hh>
+#include <protocols/hybridization/BackboneTorsionPerturbationCreator.hh>
+
+#include <protocols/hydrate/HydratePackerMoverCreator.hh>
+#include <protocols/hydrate/RemoveWatersMoverCreator.hh>
+#include <protocols/hydrate/RemoveFarAwayWatersMoverCreator.hh>
+
+// I //////////////////////////////////////////////////////////////////////////
+#include <protocols/idealize/IdealizeMoverCreator.hh>
+#include <protocols/indexed_structure_store/movers/DirectSegmentLookupMoverCreator.hh>
+#include <protocols/indexed_structure_store/movers/SegmentSequenceProfileMoverCreator.hh>
+
+// K //////////////////////////////////////////////////////////////////////////
+#include <protocols/kinematic_closure/KicMoverCreator.hh>
+#include <protocols/kinematic_closure/BalancedKicMoverCreator.hh>
+
+// L //////////////////////////////////////////////////////////////////////////
+
+#include <protocols/legacy_sewing/sampling/LegacyAppendAssemblyMoverCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyGivenPathAssemblyMoverCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyGreedyAssemblyMoverCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyMonteCarloAssemblyMoverCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyAssemblyConstraintsMoverCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyAddStartnodeFragmentsCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyAssemblyConstraintsMover.hh>
+#include <protocols/legacy_sewing/sampling/LegacyRepeatAssemblyMoverCreator.hh>
+#include <protocols/legacy_sewing/sampling/LegacyEnumerateAssemblyMoverCreator.hh>
+
+#include <protocols/ligand_docking/AddHydrogensCreator.hh>
+#include <protocols/ligand_docking/CompoundTranslateCreator.hh>
+#include <protocols/ligand_docking/ComputeLigandRDFCreator.hh>
+#include <protocols/ligand_docking/FinalMinimizerCreator.hh>
+#include <protocols/ligand_docking/GrowLigandCreator.hh>
+#include <protocols/ligand_docking/HighResDockerCreator.hh>
+#include <protocols/ligand_docking/HighResEnsembleCreator.hh>
+#include <protocols/ligand_docking/InterfaceScoreCalculatorCreator.hh>
+#include <protocols/ligand_docking/LigandDesignCreator.hh>
+#include <protocols/ligand_docking/MinimizeBackboneCreator.hh>
+#include <protocols/ligand_docking/ProtLigEnsembleCreator.hh>
+#include <protocols/ligand_docking/RandomConformersCreator.hh>
+#include <protocols/ligand_docking/RotateCreator.hh>
+#include <protocols/ligand_docking/RotatesCreator.hh>
+#include <protocols/ligand_docking/SlideTogetherCreator.hh>
+#include <protocols/ligand_docking/StartFromCreator.hh>
+#include <protocols/ligand_docking/TransformCreator.hh>
+#include <protocols/ligand_docking/TransformEnsembleCreator.hh>
+#include <protocols/ligand_docking/TranslateCreator.hh>
+#include <protocols/ligand_docking/WriteLigandMolFileCreator.hh>
+
+#include <protocols/ligand_docking/GALigandDock/GALigandDockCreator.hh>
+
+#include <protocols/loop_build/LoopmodelWrapperCreator.hh>
+#include <protocols/loop_build/LoopMover_SlidingWindowCreator.hh>
+
+#include <protocols/loop_grower/FragmentExtensionCreator.hh>
+
+#include <protocols/loop_modeler/LoopModelerCreator.hh>
+#include <protocols/loop_modeling/LoopProtocolCreator.hh>
+#include <protocols/loop_modeling/LoopBuilderCreator.hh>
+#include <protocols/loop_modeling/refiners/MinimizationRefinerCreator.hh>
+#include <protocols/loop_modeling/refiners/RepackingRefinerCreator.hh>
+#include <protocols/loop_modeling/refiners/RotamerTrialsRefinerCreator.hh>
+#include <protocols/loop_modeling/samplers/LegacyKicSamplerCreator.hh>
+#include <protocols/loop_modeling/utilities/PrepareForCentroidCreator.hh>
+#include <protocols/loop_modeling/utilities/PrepareForFullatomCreator.hh>
+
+#include <protocols/loophash/LoopHashMoverWrapperCreator.hh>
+#include <protocols/loophash/LoopHashDiversifierCreator.hh>
+
+#include <protocols/loops/FoldTreeFromLoopsWrapperCreator.hh>
+#include <protocols/loops/LoopMoverFactory.hh>
+
+#include <protocols/loops/loop_closure/ccd/CCDLoopClosureMoverCreator.hh>
+
+#include <protocols/loops/loop_closure/jacobi/JacobiLoopClosureMoverCreator.hh>
+
+#include <protocols/loops/loop_mover/LoopCMCreator.hh>
+#include <protocols/loops/loop_mover/perturb/LoopMover_CCDCreator.hh>
+#include <protocols/loops/loop_mover/perturb/LoopMover_KICCreator.hh>
+#include <protocols/loops/loop_mover/perturb/LoopMover_QuickCCDCreator.hh>
+#include <protocols/loops/loop_mover/perturb/LoopMover_QuickCCD_MovesCreator.hh>
+#include <protocols/loops/loop_mover/refine/LoopMover_BackrubCreator.hh>
+#include <protocols/loops/loop_mover/refine/LoopMover_CCDCreator.hh>
+#include <protocols/loops/loop_mover/refine/LoopMover_KICCreator.hh>
+#include <protocols/loops/loop_mover/refine/LoopRefineInnerCycleContainerCreator.hh>
+#include <protocols/loops/loop_mover/refine/RepackTrialCreator.hh>
+#include <protocols/loops/loop_mover/refine/ShearMinCCDTrialCreator.hh>
+#include <protocols/loops/loop_mover/refine/SmallMinCCDTrialCreator.hh>
+
+// M //////////////////////////////////////////////////////////////////////////
+#include <protocols/match/MatcherMoverCreator.hh>
+
+#include <protocols/matdes/ExtractSubposeMoverCreator.hh>
+#include <protocols/matdes/MatDesGreedyOptMutationMoverCreator.hh>
+#include <protocols/matdes/SymDofMoverCreator.hh>
+#include <protocols/matdes/SchemePlaceMotifsMoverCreator.hh>
+
+#include <protocols/md/CartesianMDCreator.hh>
+
+#include <protocols/mean_field/GenMeanFieldMoverCreator.hh>
+
+#include <protocols/membrane/AddMembraneMoverCreator.hh>
+#include <protocols/membrane/AddMembraneSpanConstraintCreator.hh>
+#include <protocols/membrane/AddMembraneSpanTermZConstraintCreator.hh>
+#include <protocols/membrane/AddMPLigandMoverCreator.hh>
+#include <protocols/membrane/FlipMoverCreator.hh>
+#include <protocols/membrane/MembranePositionFromTopologyMoverCreator.hh>
+#include <protocols/membrane/MPQuickRelaxMoverCreator.hh>
+#include <protocols/membrane/MPLipidAccessibilityCreator.hh>
+#include <protocols/membrane/OptimizeMembranePositionMoverCreator.hh>
+#include <protocols/membrane/SetMembranePositionMoverCreator.hh>
+#include <protocols/membrane/SpinAroundPartnerMoverCreator.hh>
+#include <protocols/membrane/TiltMoverCreator.hh>
+#include <protocols/membrane/TransformIntoMembraneMoverCreator.hh>
+
+#include <protocols/membrane_benchmark/MembraneEnergyLandscapeSamplerCreator.hh>
+#include <protocols/membrane_benchmark/PeptideOrientationMoverCreator.hh>
+#include <protocols/membrane/benchmark/SampleTiltAnglesCreator.hh>
+#include <protocols/membrane/benchmark/MakeCanonicalHelixCreator.hh>
+
+#include <protocols/membrane/symmetry/SymmetricAddMembraneMoverCreator.hh>
+
+#include <protocols/membrane/visualize/VisualizeMembraneMoverCreator.hh>
+#include <protocols/membrane/visualize/VisualizeEmbeddingMoverCreator.hh>
+
+#include <protocols/metal_interface/RemoveMetalConnectionsMoverCreator.hh>
+
+#include <protocols/motifs/MotifDnaPackerCreator.hh>
+
+#include <protocols/motif_grafting/movers/MotifGraftCreator.hh>
+
+#include <protocols/moves/DsspMoverCreator.hh>
+#include <protocols/moves/IfMoverCreator.hh>
+#include <protocols/moves/MoverContainerCreator.hh>
+#include <protocols/moves/IteratedConvergenceMoverCreator.hh>
+#include <protocols/moves/PyMOLMoverCreator.hh>
+#include <protocols/moves/RampingMoverCreator.hh>
+#include <protocols/moves/FilterReportAsPoseExtraScoresMoverCreator.hh>
+
+// N //////////////////////////////////////////////////////////////////////////
+#include <protocols/ncbb/SecStructMinimizeMoverCreator.hh>
+#include <protocols/ncbb/ResidueReplacementRebuildMoverCreator.hh>
+#include <protocols/ncbb/NcbbDockDesignProtocolCreator.hh>
+#include <protocols/ncbb/oop/OopDockDesignProtocolCreator.hh>
+#include <protocols/ncbb/oop/OopCreatorMoverCreator.hh>
+#include <protocols/nmr/ParaNMRScoreMoverCreator.hh>
+#include <protocols/nmr/pre/PREMoverCreator.hh>
+#include <protocols/nmr/pcs/PCSLigandTransformMoverCreator.hh>
+#include <protocols/nonlocal/SingleFragmentMoverCreator.hh>
+#include <protocols/normalmode/NormalModeMinimizerCreator.hh>
+#include <protocols/normalmode/NormalModeRelaxMoverCreator.hh>
+
+// P //////////////////////////////////////////////////////////////////////////
+#include <protocols//pdbinfo_manipulations/AlignPDBInfoToSequencesCreator.hh>
+#include <protocols/pb_potential/SetupPoissonBoltzmannPotentialCreator.hh>
+
+#include <protocols/pose_length_moves/AnalyzeLoopModelingCreator.hh>
+#include <protocols/pose_length_moves/ConnectChainsMoverCreator.hh>
+#include <protocols/pose_length_moves/FixAllLoopsMoverCreator.hh>
+#include <protocols/pose_length_moves/InsertResMoverCreator.hh>
+#include <protocols/pose_length_moves/NearNativeLoopCloserCreator.hh>
+
+
+#include <protocols/pose_sewing/movers/AddFlankingVirtualResiduesMoverCreator.hh>
+#include <protocols/pose_sewing/movers/OmnibusDisulfideAnalysisLabelerMoverCreator.hh>
+#include <protocols/pose_sewing/movers/PickRandomSegmentMoverCreator.hh>
+#include <protocols/pose_sewing/movers/SewAnythingAddMoverCreator.hh>
+
+#include <protocols/protein_interface_design/movers/AddChainBreakCreator.hh>
+#include <protocols/protein_interface_design/movers/AddSidechainConstraintsToHotspotsCreator.hh>
+#include <protocols/protein_interface_design/movers/BackrubDDMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/BestHotspotCstMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/BuildAlaPoseCreator.hh>
+#include <protocols/protein_interface_design/movers/DesignMinimizeHbondsCreator.hh>
+#include <protocols/protein_interface_design/movers/DisulfideMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/DockAndRetrieveSidechainsCreator.hh>
+#include <protocols/protein_interface_design/movers/FavorNativeResiduePreCycleCreator.hh>
+#include <protocols/protein_interface_design/movers/FavorNonNativeResiduePreCycleCreator.hh>
+#include <protocols/protein_interface_design/movers/HotspotDisjointedFoldTreeMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/HotspotHasherMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/InterfaceRecapitulationMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/LoopFinderCreator.hh>
+#include <protocols/protein_interface_design/movers/LoopLengthChangeCreator.hh>
+#include <protocols/protein_interface_design/movers/LoopMoverFromCommandLineCreator.hh>
+#include <protocols/protein_interface_design/movers/LoopOverCreator.hh>
+#include <protocols/protein_interface_design/movers/LoopRemodelCreator.hh>
+#include <protocols/protein_interface_design/movers/MapHotspotCreator.hh>
+#include <protocols/protein_interface_design/movers/PatchdockTransformCreator.hh>
+#include <protocols/protein_interface_design/movers/PeptideStapleDesignMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/PlacementAuctionMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/PlacementMinimizationMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/PlaceOnLoopCreator.hh>
+#include <protocols/protein_interface_design/movers/PlaceSimultaneouslyMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/PlaceStubMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/PrepackMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/ProteinInterfaceMultiStateDesignMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/RandomMutationCreator.hh>
+#include <protocols/protein_interface_design/movers/RepackMinimizeCreator.hh>
+#include <protocols/protein_interface_design/movers/SaveAndRetrieveSidechainsCreator.hh>
+#include <protocols/protein_interface_design/movers/SecretionOptimizationMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/SetAtomTreeCreator.hh>
+#include <protocols/protein_interface_design/movers/SetTemperatureFactorCreator.hh>
+#include <protocols/protein_interface_design/movers/SetupHotspotConstraintsMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/SetupHotspotConstraintsLoopsMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/SpinMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/TaskAwareCstsCreator.hh>
+#include <protocols/protein_interface_design/movers/SubroutineMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/TryRotamersCreator.hh>
+#include <protocols/protein_interface_design/movers/ShoveResidueMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/VLBCreator.hh>
+#include <protocols/protein_interface_design/movers/DockWithHotspotMoverCreator.hh>
+#include <protocols/protein_interface_design/movers/TopologyBrokerMoverCreator.hh>
+
+#include <protocols/protein_mpnn/ProteinMPNNMoverCreator.hh>
+
+// Q //////////////////////////////////////////////////////////////////////////
+#include <protocols/qsar/RenderGridsToKinemageCreator.hh>
+
+#include <protocols/quantum_annealing/ExternalPackerResultLoaderCreator.hh>
+
+// R //////////////////////////////////////////////////////////////////////////
+#include <protocols/rbsegment_relax/MakeStarTopologyCreator.hh>
+#include <protocols/rbsegment_relax/OptimizeThreadingCreator.hh>
+#include <protocols/rbsegment_relax/IdealizeHelicesCreator.hh>
+#include <protocols/rbsegment_relax/ConfChangeMoverCreator.hh>
+
+#include <protocols/recces/scratch/ThermalSamplingMoverCreator.hh>
+#include <protocols/recces/scratch/ThermalMinimizerCreator.hh>
+
+#include <protocols/relax/AcceptToBestMoverCreator.hh>
+#include <protocols/relax/AtomCoordinateCstMoverCreator.hh>
+#include <protocols/relax/FastRelaxCreator.hh>
+#include <protocols/relax/LocalRelaxCreator.hh>
+#include <protocols/relax/RepeatProteinRelaxCreator.hh>
+
+#include <protocols/relax/membrane/MPFastRelaxMoverCreator.hh>
+
+#include <protocols/residue_selectors/StoreResidueSubsetMoverCreator.hh>
+
+#include <protocols/rigid/RigidBodyMoverCreator.hh>
+#include <protocols/rigid/RollMoverCreator.hh>
+#include <protocols/rigid/UniformRigidBodyCMCreator.hh>
+#include <protocols/rigid/UniformRigidBodyMoverCreator.hh>
+
+#include <protocols/rna/denovo/movers/RNA_DeNovoProtocolMoverCreator.hh>
+#include <protocols/rna/movers/RNA_CoarsifyCreator.hh>
+#include <protocols/rna/movers/RNA_DecoarsifyCreator.hh>
+#include <protocols/rna/movers/ErraserMinimizerMoverCreator.hh>
+#include <protocols/rna/movers/ERRASER2ProtocolCreator.hh>
+#include <protocols/rna/movers/RNAIdealizeMoverCreator.hh>
+
+#include <protocols/rosetta_scripts/ParsedProtocolCreator.hh>
+#include <protocols/rosetta_scripts/SavePoseMoverCreator.hh>
+#include <protocols/rosetta_scripts/MultiplePoseMoverCreator.hh>
+#include <protocols/rosetta_scripts/MultipleOutputWrapperCreator.hh>
+
+#include <protocols/rotamer_recovery/RotamerRecoveryMoverCreator.hh>
+
+// S //////////////////////////////////////////////////////////////////////////
+#include <protocols/seeded_abinitio/CAcstGeneratorCreator.hh>
+#include <protocols/seeded_abinitio/CloseFoldCreator.hh>
+#include <protocols/seeded_abinitio/CoordinateCstCreator.hh>
+#include <protocols/seeded_abinitio/DefineMovableLoopsCreator.hh>
+#include <protocols/seeded_abinitio/GrowPeptidesCreator.hh>
+#include <protocols/seeded_abinitio/SeedFoldTreeCreator.hh>
+#include <protocols/seeded_abinitio/SeedSetupMoverCreator.hh>
+#include <protocols/seeded_abinitio/SwapSegmentCreator.hh>
+#include <protocols/seeded_abinitio/SegmentHybridizerCreator.hh>
+
+
+#include <protocols/sewing/movers/AssemblyMoverCreator.hh>
+#include <protocols/sewing/movers/AppendAssemblyMoverCreator.hh>
+#include <protocols/sewing/movers/LigandBindingAssemblyMoverCreator.hh>
+
+#include <protocols/minimization_packing/BoltzmannRotamerMoverCreator.hh>
+#include <protocols/minimization_packing/DisulfideOptimizationMoverCreator.hh>
+#include <protocols/minimization_packing/MinMoverCreator.hh>
+#include <protocols/minimization_packing/MinPackMoverCreator.hh>
+#include <protocols/minimization_packing/PackRotamersMoverCreator.hh>
+#include <protocols/minimization_packing/PertMinMoverCreator.hh>
+#include <protocols/minimization_packing/RotamerTrialsMinMoverCreator.hh>
+#include <protocols/minimization_packing/RotamerTrialsMoverCreator.hh>
+#include <protocols/minimization_packing/TaskAwareMinMoverCreator.hh>
+#include <protocols/minimization_packing/SaneMinMoverCreator.hh>
+#include <protocols/minimization_packing/symmetry/SymMinMoverCreator.hh>
+#include <protocols/minimization_packing/symmetry/SymPackRotamersMoverCreator.hh>
+#include <protocols/minimization_packing/symmetry/SymRotamerTrialsMoverCreator.hh>
+#include <protocols/minimization_packing/symmetry/TaskAwareSymMinMoverCreator.hh>
+
+#include <protocols/pose_creation/ExtendedPoseMoverCreator.hh>
+#include <protocols/pose_creation/MakePolyXMoverCreator.hh>
+#include <protocols/pose_creation/PoseFromSequenceMoverCreator.hh>
+#include <protocols/pose_creation/SliceToMiniProteinMoverCreator.hh>
+
+#include <protocols/simple_moves/AddChainMoverCreator.hh>
+#include <protocols/simple_moves/AddJobPairDataCreator.hh>
+#include <protocols/simple_moves/AddPDBInfoMoverCreator.hh>
+#include <protocols/simple_moves/AddResidueCouplingConstraintCreator.hh>
+#include <protocols/simple_moves/AddResidueLabelMoverCreator.hh>
+#include <protocols/simple_moves/AddSapConstraintMoverCreator.hh>
+#include <protocols/simple_moves/AddSapMathConstraintMoverCreator.hh>
+#include <protocols/simple_moves/AlignChainMoverCreator.hh>
+#include <protocols/simple_moves/BackboneMoverCreator.hh>
+#include <protocols/simple_moves/BBGaussianMoverCreator.hh>
+#include <protocols/simple_moves/ChangeAndResetFoldTreeMoverCreator.hh>
+#include <protocols/simple_moves/ConcatenatePosesMoverCreator.hh>
+#include <protocols/calc_taskop_movers/ConsensusDesignMoverCreator.hh>
+#include <protocols/simple_moves/ContingentAcceptMoverCreator.hh>
+#include <protocols/simple_moves/ConvertRealToVirtualMoverCreator.hh>
+#include <protocols/simple_moves/ConvertVirtualToRealMoverCreator.hh>
+#include <protocols/simple_moves/CopyRotamerMoverCreator.hh>
+#include <protocols/simple_moves/CoupledMoverCreator.hh>
+#include <protocols/calc_taskop_movers/CreateSequenceMotifMoverCreator.hh>
+#include <protocols/simple_ddg/ddGCreator.hh>
+#include <protocols/simple_moves/DeclareBondCreator.hh>
+#include <protocols/simple_moves/DEEROptimizeCoordsMoverCreator.hh>
+#include <protocols/simple_moves/DeleteChainMoverCreator.hh>
+#include <protocols/simple_moves/DeleteChainsMoverCreator.hh>
+#include <protocols/simple_moves/DisulfideInsertionMoverCreator.hh>
+#include <protocols/simple_moves/DumpSingleResidueRotamersCreator.hh>
+#include <protocols/simple_moves/DumpPdbCreator.hh>
+#include <protocols/simple_moves/ExplicitWaterMoverCreator.hh>
+#include <protocols/simple_moves/FavorSequenceProfileCreator.hh>
+#include <protocols/simple_moves/FavorSymmetricSequenceCreator.hh>
+#include <protocols/simple_moves/FoldTreeFromMotifCreator.hh>
+#include <protocols/calc_taskop_movers/ForceDisulfidesMoverCreator.hh>
+#include <protocols/monte_carlo/GenericMonteCarloMoverCreator.hh>
+#include <protocols/monte_carlo/GenericSimulatedAnnealerCreator.hh>
+#include <protocols/pose_creation/LoadPDBMoverCreator.hh>
+#include <protocols/simple_moves/LoadUnboundRotMoverCreator.hh>
+#include <protocols/pose_creation/MakeJunctionsMoverCreator.hh>
+#include <protocols/simple_moves/MembraneTopologyCreator.hh>
+#include <protocols/pose_creation/MergePDBatOverlapMoverCreator.hh>
+#include <protocols/pose_creation/MergePDBMoverCreator.hh>
+#include <protocols/simple_moves/ModifyVariantTypeMoverCreator.hh>
+#include <protocols/monte_carlo/MonteCarloRecoverCreator.hh>
+#include <protocols/monte_carlo/MonteCarloResetCreator.hh>
+#include <protocols/monte_carlo/MonteCarloTestCreator.hh>
+#include <protocols/simple_moves/MutateResidueCreator.hh>
+#include <protocols/simple_moves/PDBReloadMoverCreator.hh>
+#include <protocols/simple_moves/PeriodicBoxMoverCreator.hh>
+#include <protocols/simple_moves/PoseFromPoseResourceMoverCreator.hh>
+#include <protocols/simple_moves/PSSM2BfactorMoverCreator.hh>
+#include <protocols/simple_moves/RandomOmegaFlipMoverCreator.hh>
+#include <protocols/simple_moves/RandomTorsionMoverCreator.hh>
+#include <protocols/pose_creation/RepeatPropagationMoverCreator.hh>
+#include <protocols/simple_moves/ReportEffectivePKACreator.hh>
+#include <protocols/simple_moves/ReportXYZCreator.hh>
+#include <protocols/monte_carlo/ResetBaselineMoverCreator.hh>
+#include <protocols/simple_moves/ResetFoldTreeCreator.hh>
+#include <protocols/simple_moves/ResetFullModelInfoMoverCreator.hh>
+#include <protocols/constraint_movers/ResidueTypeConstraintMoverCreator.hh>
+#include <protocols/simple_moves/RingConformationMoverCreator.hh>
+#include <protocols/simple_moves/SaveSequenceToCommentsMoverCreator.hh>
+#include <protocols/simple_moves/ScoreMoverCreator.hh>
+#include <protocols/simple_moves/SequenceProfileMoverCreator.hh>
+#include <protocols/simple_moves/SetTorsionCreator.hh>
+#include <protocols/simple_moves/SetupMetalsMoverCreator.hh>
+#include <protocols/simple_moves/ShortBackrubMoverCreator.hh>
+#include <protocols/simple_moves/SimpleThreadingMoverCreator.hh>
+#include <protocols/simple_moves/SixDoFGridDockMoverCreator.hh>
+#include <protocols/simple_moves/StorePoseSnapshotCreator.hh>
+#include <protocols/simple_moves/StructProfileMoverCreator.hh>
+#include <protocols/simple_moves/SuperimposeMoverCreator.hh>
+#include <protocols/simple_moves/SwitchChainOrderMoverCreator.hh>
+#include <protocols/simple_moves/SwitchResidueTypeSetMoverCreator.hh>
+#include <protocols/simple_moves/TumbleCreator.hh>
+#include <protocols/simple_moves/VirtualRootMoverCreator.hh>
+#include <protocols/simple_moves/WriteSSEMoverCreator.hh>
+
+#include <protocols/simple_moves/bin_transitions/InitializeByBinsCreator.hh>
+#include <protocols/simple_moves/bin_transitions/PerturbByBinsCreator.hh>
+
+#include <protocols/simple_moves/sidechain_moves/SidechainMCMoverCreator.hh>
+#include <protocols/simple_moves/sidechain_moves/SidechainMoverCreator.hh>
+#include <protocols/simple_moves/sidechain_moves/SetChiMoverCreator.hh>
+#include <protocols/simple_moves/sidechain_moves/PerturbRotamerSidechainMoverCreator.hh>
+#include <protocols/simple_moves/sidechain_moves/JumpRotamerSidechainMoverCreator.hh>
+#include <protocols/simple_moves/sidechain_moves/PerturbChiSidechainMoverCreator.hh>
+
+#include <protocols/symmetry/DetectSymmetryMoverCreator.hh>
+#include <protocols/symmetry/SetupForSequenceSymmetryMoverCreator.hh>
+#include <protocols/symmetry/SetupForSymmetryMoverCreator.hh>
+#include <protocols/symmetry/SetupNCSMoverCreator.hh>
+#include <protocols/simple_moves/WriteFiltersToPoseCreator.hh>
+
+#include <protocols/stepwise/monte_carlo/mover/AddMoverCreator.hh>
+
+#include <protocols/struct_fragment/StructFragmentMoverCreator.hh>
+
+#include <protocols/switches/GraftSwitchMoverCreator.hh>
+
+#include <protocols/symmetric_docking/SymDockProtocolCreator.hh>
+#include <protocols/symmetric_docking/SymFoldandDockCreators.hh>
+
+#include <protocols/symmetric_docking/membrane/MPSymDockMoverCreator.hh>
+#include <protocols/simple_moves/asym_fold_and_dock/AsymFoldandDockMoveRbJumpMoverCreator.hh>
+#include <protocols/simple_moves/asym_fold_and_dock/AsymFoldandDockRbTrialMoverCreator.hh>
+
+#include <protocols/splice/SpliceCreator.hh>
+#include <protocols/splice/SpliceInCreator.hh>
+#include <protocols/splice/SpliceInTailCreator.hh>
+#include <protocols/splice/SpliceInAntibodyCreator.hh>
+#include <protocols/splice/SpliceOutCreator.hh>
+#include <protocols/splice/TailSegmentMoverCreator.hh>
+#include <protocols/splice/SpliceOutAntibodyCreator.hh>
+#include <protocols/splice/SpliceOutTailCreator.hh>
+#include <protocols/splice/RotLibOutCreator.hh>
+#include <protocols/splice/AlignEndsMoverCreator.hh>
+#include <protocols/cutoutdomain/CutOutDomainCreator.hh>
+#include <protocols/splice/RBOutMoverCreator.hh>
+#include <protocols/splice/RBInMoverCreator.hh>
+// T //////////////////////////////////////////////////////////////////////////
+
+#include <protocols/task_operations/StoreCombinedStoredTasksMoverCreator.hh>
+#include <protocols/task_operations/StoreCompoundTaskMoverCreator.hh>
+#include <protocols/task_operations/StoreTaskMoverCreator.hh>
+
+#include <protocols/testing/BenchmarkBuildRotamersMoverCreator.hh>
+
+#include <protocols/trRosetta_protocols/movers/trRosettaProtocolMoverCreator.hh>
+
+#include <protocols/vardist_solaccess/LoadVarSolDistSasaCalculatorMover.hh>

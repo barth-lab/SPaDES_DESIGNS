@@ -218,6 +218,13 @@ Options = Option_Group( '',
 			legal=["true", "false"],
 			default="false"),
 
+		## Mixed MC option
+		## Author: Ameya Harmalkar
+		Option("tuning_param", "Real",
+			desc="Specify the tuning parameter to modulate lowres and highres score functions.",
+			default= "1.0"),
+
+
 		# PDB data-preservation options ---------------------------------------
 		Option( 'remember_unrecognized_res'  , 'Boolean',
 				desc="Ignore unrecognized residues, but remember them in PDBInfo.",
@@ -232,6 +239,10 @@ Options = Option_Group( '',
 		# Auto-detection options ----------------------------------------------
 		Option( 'detect_oops', 'Boolean',
 				desc="Detect oligooxopiperazines (oops) and add required constraints",
+				default='false' ),
+		Option( 'obey_ssbond', 'Boolean',
+				desc="When true, defer to the SSBOND records in the PDB for disulfide specification."
+						"When false, use -detect_disulf settings to determine disulfide bonding.",
 				default='false' ),
 		Option( 'detect_disulf', 'Boolean',
 				desc="Forcably enable or disable disulfide detection. "
@@ -372,6 +383,7 @@ Options = Option_Group( '',
 			Option( 'extra_res', 'FileVector', desc=".params file(s) for new residue types (e.g. ligands)", default=[] ),
 			Option( 'extra_res_fa', 'FileVector',
 					desc=".params file(s) for new fullatom residue types (e.g. ligands)", default=[] ),
+			Option( 'override_database_params', 'Boolean', desc="Use input .params file(s) instead of database if residue name is found in residue set", default='false'),
 			Option( 'extra_res_mol', 'FileVector',
 					desc=".mol file(s) for new fullatom residue types (e.g. ligands)", default=[] ),
 			Option( 'extra_res_mmCIF', 'FileVector',
@@ -1399,6 +1411,7 @@ Options = Option_Group( '',
 	Option_Group( 'score',
 		Option( 'score_pose_cutpoint_variants', 'Boolean', desc='Include cutpoint variants in the pose during linear chainbreak', default='false'),
 		Option( 'score', 'Boolean', desc="scorefunction option group", legal='true', default='true' ),
+		Option( 'lowres_weights', 'String', desc="Name of lowres weights file (without extension .wts)" , default="interchain_cen" ),
 		Option( 'weights', 'String', desc="Name of weights file (without extension .wts)" , default="ref2015" ),
 		Option( 'set_weights', 'StringVector', desc="Modification to weights via the command line. Applied in ScoreFunctionFactory::create_score_function inside the function apply_user_defined_reweighting_. Format is a list of paired strings: -score::set_weights <score_type1> <setting1> <score_type2> <setting2> ..." ),
 		Option( 'pack_weights', 'String', desc="Name of packing weights file (without extension .wts)" , default="ref2015" ),
@@ -2766,6 +2779,7 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 		), #-corrections:chemical
 
 		Option_Group( 'genpotential',
+            Option( 'quick_lookup', 'Boolean', desc="Use quick lookup in lookup_tors_params", default='false'),
 			Option( 'set_torsion_params', 'StringVector', desc="Modify generic_bonded_potential torsion parameters (the ones in generic_bonded.round6p.txt) from the command line. Format is: -corrections:genpotential:set_torsion_params <atom-set1>:<atom_name1>:<atom_name2>:<atom_name3>:<atom_name4><param1>:<setting1>:<param2>:<setting2> ... For example: '-corrections:genpotential:set_torsion_params fa_standard:C*:CS:CS:C*:k1:0.0:k2:0.0:k3:0.077 fa_standard:CD:CS:CS:CD:k1:0.435:k2:0.039:k3:0.070' "),
 			Option( 'set_special_torsion_params', 'StringVector', desc="Modify generic_bonded_potential special torsion parameters (the ones in generic_bonded.round6p.txt) from the command line. Format is: -corrections:genpotential:set_special_torsion_params <atom-set1>:<atom_name1>:<atom_name2>:<atom_name3>:<atom_name4><param1>:<setting1>:<param2>:<setting2> ... For example: '-corrections:genpotential:set_special_torsion_params fa_standard:X:CRb:CRb:X:k1:0.000:k2:-0.226:k3:0.000:k4:0.093:k8:0.000 ' "),
 			#Option( 'set_improper_torsion_params', 'StringVector', desc = "Modify atom properties (the ones in <atom-set>/atom_properties.txt) from the command line. Happens at time of AtomTypeSet creation inside ChemicalManager.cc. Format is: -chemical:set_atom_properties <atom-set1>:<atom_name1>:<param1>:<setting1> <atom-set2>:<atom2>:<param2>:<setting2> ... For example: '-chemical:set_atom_properties fa_standard:OOC:LK_DGFREE:-5 fa_standard:ONH2:LJ_RADIUS:0.5' "),
@@ -3418,7 +3432,7 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 	),
 
 	#New Membrane Protein Option group (RosettaMP)
-	Option_Group( 'mp',		
+	Option_Group( 'mp',
 
 		# Option to restore previous energy function behavior (IMM1 - 2003)
 		Option( "restore_lazaridis_imm_behavior", "Boolean", desc="Restore energy function behavior to Lazaridis IMM1", default="false" ),
@@ -3487,6 +3501,8 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 		# Setup Options
 		Option_Group( 'setup',
 			Option( 'spanfiles', 'StringVector', desc="Spanning topology file from Octopus" ),
+			Option( 'span1', 'String', desc="Spanning topology file for partner 1" ),
+			Option( 'span2', 'String', desc="Spanning topology file for partner 2" ),
 			Option( 'spans_from_structure', 'Boolean', desc="Uses spanning topology computed from the PDB; requires the protein to be transformed into the membrane coordinate frame!" ),
 			Option( 'lipsfile', 'String', desc="List of lips files by chain", default='mypdb.lips4' ),
 			Option( 'center', 'RealVector', desc="membrane center x,y,z" ),
@@ -4863,6 +4879,7 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 										Option( 'cst_file', 'FileVector', desc='An optional, user-specified list of one or more constraints files.  Default unused.' ),
 										Option( 'extra_rms_atoms', 'StringVector', desc='A list of additional atoms to use in the RMSD calculation, each in the format residue:atomname separated by whitespace.  For example, -extra_rms_atoms 7:SG 12:CG 12:CD 12:CE 12:NZ 14:OG.  Default empty list.' ),
 										Option( 'rebuild_all_in_dihedral_mode', 'Boolean', desc='If true, full poses are rebuilt for output when clustering in dihedral mode.  If false, only backbones are written out.  True by default.', default = 'true' ),
+                	Option( 'alternative_score_file', 'File', desc='A file containing one line per Structure with the pose input file name and an alternative score to sort by seperated by whitespace.' ),
                 ),
 	),
 
@@ -7114,6 +7131,40 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 		Option( 'no_rotamer_bump', 'Boolean', default = 'false', desc = 'skip the bump check when making the rotamers that will be tested for motif interactions, makes code much slower, but it is advised to increase the max_rotbump_energy to at least 10.0 instead of the default of 5.0 if bump_check is being used'),
 		Option('ligand_motif_sphere','Real', default = '6.0',
 			desc="option to specify radius of motif search around ligand"),
+		Option( 'output_build_positions_only', 'Boolean', default = 'false', desc = 'intended to trigger to only spit out build positions for protein and stop the program if true'),
+		Option( 'specific_build_position', 'Real', default = '0', desc = 'read in for when collecting relevant motifs per build position, only collect motifs for this build position; intended for long motif lists where it will be best to run motif collection per build position in parallel'),
+		Option( 'verbosity', 'Boolean', default = 'false', desc = 'Boolean to indicate whether the user wants verbose output on motifs that are rejected in single_ligand_motif_from_stream from motif_utils.cc. This is for the version that does not kill the istream when a bad motif is encountered'),
+		Option( 'params_directory_path', 'String', default = ' ', desc = 'User-inputted path to a directory where params files are located to be read into a script'),
+		Option( 'sdf_directory_path', 'String', default = ' ', desc = 'User-inputted path to a directory where sdf files are located to be read into a script'),
+		Option( 'mol2_directory_path', 'String', default = ' ', desc = 'User-inputted path to a directory where mol2 files are located to be read into a script'),
+		Option( 'mol2_file', 'String', default = ' ', desc = 'User-inputted name of mol2 file to be converted into a params file. Path to file can be included.'),
+		Option( 'mol2_amino_acid', 'String', desc = 'set up params file for modified amino acid; .mol2 only; edit chis afterward.'),
+		Option( 'params_custom_file_name', 'String', desc = 'String to be the name of the output params file (include any extension and pathing in this flag)'),
+		Option( 'ligand_3_letter_code', 'String', desc = 'Custom 3 letter code for ligand (will take first 3 letters from mol2 file otherwise)'),
+		Option( 'ligand_1_letter_code', 'String', desc = 'Custom 1 letter code for ligand (will take first letter from mol2 file otherwise)'),
+		Option( 'ligand_full_name', 'String', desc = 'Custom name of ligand'),
+		Option( 'write_param_to_pdb', 'Boolean', default = 'false', desc = 'Bool to use in params file generation script to indicate to make a pdb file of the ligand (to compare to original mol2 and confirm successful translation)'),
+		Option( 'protein_discovery_locus', 'Real', default = '0', desc = 'Value to indicate the index/locus that a user wants to run ligand discovery for on a protein'),
+		Option( 'fa_rep_cutoff', 'Real', default = '0', desc = 'Value for ligand discovery cutoff for fa_rep score'),
+		Option( 'fa_atr_cutoff', 'Real', default = '0', desc = 'Value for ligand discovery cutoff for fa_atr score'),
+		Option( 'output_ligand_pdb', 'Boolean', default = 'false', desc = 'Optional flag to choose to output read in ligands back out as pdb files. Useful for debugging as well as getting an original ligand in the original placement location for the RMSD calculations'),
+		Option( 'check_new_param_file', 'Boolean', default = 'false', desc = 'Decide whether to test a generated params file and make sure it was accurately converted (time consumming operation)'),
+		Option( 'ddg_cutoff', 'Real', default = '1000000', desc = 'Real value to be used as a cutoff for keeping placed ligands. Optimized placement must be better (smaller) than cutoff. Using very large default value for ease in implementing the filter variable'),
+		Option( 'best_pdbs_to_keep', 'Integer', default = '0', desc = 'Size to determine the number of placed ligands to keep and output as pdbs. Default value of 0 indicates to keep any that make it to ddg evaluation (could be a lot)'),
+		Option( 'resolution_scale_factor', 'Integer', default = '1', desc = 'Scale for resolution of holes analysis protocol. Resolution is defaulted to 1 cubic angstrom. This variable is inversely proportional to the linear magnitude of the resolution. I.e. factor = 1 --> resolution = 1A^3 (cube side length = 1/1); factor = 2 --> resolution = 0.125A^3 (cube side length = 1/2) '),
+		Option( 'x_min_holes', 'Real', desc = 'If going to investigate a sub_region of a pdb, this defines the min x value of the region'),
+		Option( 'x_max_holes', 'Real', desc = 'If going to investigate a sub_region of a pdb, this defines the max x value of the region'),
+		Option( 'y_min_holes', 'Real', desc = 'If going to investigate a sub_region of a pdb, this defines the min y value of the region'),
+		Option( 'y_max_holes', 'Real', desc = 'If going to investigate a sub_region of a pdb, this defines the max y value of the region'),
+		Option( 'z_min_holes', 'Real', desc = 'If going to investigate a sub_region of a pdb, this defines the min z value of the region'),
+		Option( 'z_max_holes', 'Real', desc = 'If going to investigate a sub_region of a pdb, this defines the max z value of the region'),
+		Option( 'highresdocker_allow_minimization', 'Boolean', default = 'true', desc = 'Bool to indicate whether to allow (true) minimization or not (false) in the apply function of HighResDocker'),
+		Option( 'highresdocker_allow_repacking', 'Boolean', default = 'true', desc='Boolean in ligand_docking/HighResDocker to prevent apply function from repacking. Often want value to be true, but this allows option to make it false.'),
+		Option( 'highresdocker_use_all_residues', 'Boolean', default = 'false', desc='Boolean in ligand_docking/HighResDocker to determine whether to use all residues in generation of packer_task.'),
+		Option( 'ligand_motif_output_directory_name', 'String', default = '', desc = 'Name the directory to which motif pdbs will be outputted to, default of location where script is called. Follow a directory name with a /.'),
+		Option( 'ligand_motif_output_file_name', 'String', default = 'AllMattMotifs.motifs', desc = 'Name the file to which motifs will be outputted to, default of a local directory named AllMattMotifs.motifs. If file type extension not specified (identified as the last period encountered), will output to a file type ending in .motifs'),
+		Option( 'output_motifs_as_pdb', 'Boolean', default = 'true', desc = 'Output generated motifs as pdb files'),
+		Option( 'output_motifs', 'Boolean', default = 'true', desc = 'Output generated motifs as .motifs file and to a MotifLibrary'),
 	), # -motifs
 
 	Option_Group( 'ms' , # multistate_design
@@ -7568,7 +7619,7 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 		Option( 'pack_nloop', 'Integer', desc='How many times to repack', default='25' ),
 		Option( 'pre_bump_check', 'Boolean', desc='Do bump check before store them in memory', default='true' ),
     Option( 'bias_design_search_to_native', 'Boolean', desc='It gives an artificially large negative energy to any native rotamer during packing. It was implemented to test the use of design waters.', default='false' ),
-                Option( 'waters_per_ion', 'Integer', desc='Number of de novo waters to add per metal ion (default: 0).', default='0'),
+                    Option( 'waters_per_ion', 'Integer', desc='Number of de novo waters to add per metal ion (default: 0).', default='0'),
         Option( 'no_inside_check_for_water_rotamers', 'Boolean', desc='Debug option to not filter non-inside water rotamers, useful for hydrating non-protein systems -- WARNING: large memory when many hydrateable atoms/residues (default: false).', default='false' ),
 		Option( 'show_derivatives_check', 'Boolean', desc='Show derivatives check when minimizing in the hydrate protocol.', default='false' ),
 		Option( 'keep_non_buried_waters', 'Boolean', desc='Keep non buried waters in the final structure (not recommended).', default='false' ),
@@ -7577,6 +7628,9 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
     Option( 'show_pre_filtered_water_rotamers_count', 'Boolean', desc='Shows the total number of pre-filtered water rotamers; Helps assessing the memory requirements.', default='false' ),
 		Option( 'show_residues_near_water', 'Boolean', desc='Print out the residues that are near hydratable water after water packing and placement.', default='false' ),
 		Option( 'only_remove_non_buried_waters', 'Boolean', desc='Remove non-buried waters from input, then exit.', default='false' ),
+                Option( 'remove_de_novo_waters', 'Boolean', desc='Remove de novo waters from pose/PDB at the end of RemoveWaters protocol.', default='false' ),
+                Option( 'remove_far_away_waters', 'Boolean', desc='Remove far away waters from pose/PDB at the end of RemoveWaters protocol.', default='false' ),
+                Option( 'remove_non_buried_waters', 'Boolean', desc='Remove non buried waters from pose/PDB at the end of RemoveWaters protocol.', default='false' ),
 		Option( 'just_score', 'Boolean', desc='Just score the input structures with the hybrid solvation protocol.', default='false' ),
 		Option( 'show_rotamer_count', 'Boolean', desc='Output the rotamer counts for each water and amino acid, then exit.', default='false' ),
 		# development and debugging options
@@ -9024,4 +9078,9 @@ EX_SIX_QUARTER_STEP_STDDEVS   7          +/- 0.25, 0.5, 0.75, 1, 1.25 & 1.5 sd; 
 		Option( 'HCF', 'Boolean', desc="Cause Rosetta to exit immediately with an error.", default="false" ),
 		Option( 'INTEGRATION_TEST', 'Boolean', desc="Meta flag for best-practices flags in integration tests. Don't use on actual runs.", default="false" ),
 	), #-testing
+	
+	## for per_residue_solvent_exposure
+	Option_Group( 'solvent_exposure',
+		Option( 'method', 'String', desc="Method to calculate neighbor count, sphere or cone.", default="sphere", legal=["cone", "sphere"]),
+	), 
 ) # end options

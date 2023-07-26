@@ -343,6 +343,7 @@ Hydrate::apply(Pose & pose)
 	water_specific_hbond_energy( pose, *score_fxn_ ); //wym output water specific hbond energy to pdb
 	add_water_overcoordinated_hb_score( pose, *score_fxn_ );
 	show_water_hb_network( pose );
+
 }
 
 #ifdef MULTI_THREADED
