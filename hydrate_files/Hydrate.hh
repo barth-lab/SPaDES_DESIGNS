@@ -10,7 +10,7 @@
 /// @file src/protocols/hydrate/Hydrate.cc
 /// @brief The Hydrate Protocol
 /// @detailed
-/// @author Joaquin Ambia, Jason K. Lai
+/// @author Joaquin Ambia, Jason K. Lai, Lucas S. P. Rudden
 /// @modified Vikram K. Mulligan (vmulligan@flatironinstitute.org) to permit multi-threaded packing.
 
 #ifndef INCLUDED_protocols_hydrate_Hydrate_HH
