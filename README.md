@@ -51,6 +51,10 @@ The general inputs used for the rest of the design/ion sampling results in the p
 
 The files are set out in such a way that they can be inserted into the demos and run in place of the HIGH10 example. The relationship between the LOW/HIGH numbering and the actual mutations from WT are given in a README file.
 
+## Final Designs
+
+We provide all final hydrated designed (Low1-3 and High1-11) discussed in the manuscript in both their active and inactive states.
+
 ## Contact
 
 If you have any issues with the installation, demo or otherwise, please either submit a ticket above or contact me at lucas.rudden@epfl.ch
