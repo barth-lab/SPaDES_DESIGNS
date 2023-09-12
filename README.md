@@ -4,8 +4,6 @@ Within this repo you will find information pertaining to running Rosetta SPaDES 
 
 We include specific installation instructions, as well as detailed demos - specifically relating to the ion sampling and designs discussed in the article. In particular, the design-based demo is transferable to any SPaDES hydrate design problem.
 
-Final produced designed models, as well as the best ion sampling result from the exhaustive sampling performed to examine the impact of Na binding, are given in the final_designs and final_ion_sampling_designs folders respectively. Information on the specific mutations for each of the LOW and HIGH files are given in the README within the all_inputs folder.
-
 **IMPORTANT TO NOTE** The hydrate movers, that is those compatible with XML scripts and those needed to interface SPaDES with phenix, are available on the other repo (https://github.com/barth-lab/phenix_with_spades). These movers and the subsequent changes to protocols files etc. within Rosetta are entirely compatible with the functions provided here, as well as the most up-to-date version of Rosetta. In other words, feel free to compile a version of Rosetta with the changes listed here or with everything as given in the other repo.
 
 ## Installation
@@ -53,7 +51,7 @@ The files are set out in such a way that they can be inserted into the demos and
 
 ## Final Designs
 
-We provide all final hydrated designed (Low1-3 and High1-11) discussed in the manuscript in both their active and inactive states.
+We provide all final hydrated designed (Low1-3 and High1-11) discussed in the manuscript in both their active and inactive states. The best ion sampling result from the exhaustive sampling performed to examine the impact of Na binding is also given in the final_ion_sampling_designs folder. Information on the specific mutations for each of the LOW and HIGH files are given in the README within the all_inputs folder.
 
 ## Contact
 
