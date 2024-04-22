@@ -51,7 +51,7 @@ The files are set out in such a way that they can be inserted into the demos and
 
 ## Final Designs
 
-We provide all final hydrated designed (Low1-3 and High1-11) discussed in the manuscript in both their active and inactive states. The best ion sampling result from the exhaustive sampling performed to examine the impact of Na binding is also given in the final_ion_sampling_designs folder. Information on the specific mutations for each of the LOW and HIGH files are given in the README within the all_inputs folder.
+We provide the top 10 scoring final hydrated designs (Low1-3 and High1-11) discussed in the manuscript in both their active and inactive states. These correspond to the energies and standard errors provided in the supplementals. The top 10 ion sampling results from the exhaustive sampling performed to examine the impact of Na binding are also given in the final_ion_sampling_designs folder. Information on the specific mutations for each of the LOW and HIGH files are given in the README within the all_inputs folder.
 
 ## Contact
 
