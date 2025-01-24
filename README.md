@@ -1,7 +1,9 @@
 # SPaDES Designs
 
 Within this repo you will find information pertaining to running Rosetta SPaDES based on the paper:
+
 Chen, KY.M., Lai, J.K., Rudden, L.S.P. et al. Computational design of highly signalling-active membrane receptors through solvent-mediated allosteric networks. Nat. Chem. (2025). https://doi.org/10.1038/s41557-024-01719-2 
+
 Please cite us if you use hydrate in any capacity!
 
 We include specific installation instructions, as well as detailed demos - specifically relating to the ion sampling and designs discussed in the article. In particular, the design-based demo is transferable to any SPaDES hydrate design problem.
